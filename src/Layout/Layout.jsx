@@ -10,7 +10,7 @@ class Layout extends Component {
   render() {
     return (
       <Router>
-        <Box width="100%" height="24rem" bgGradient="linear(to-b, teal.100, white)" paddingY={2}>
+        <Box width="100%">
           <Navbar />
 
           <Routes>
