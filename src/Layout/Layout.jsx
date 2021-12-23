@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 import Navbar from "../Components/Navbar/Navbar.jsx";
 import Home from "../Screens/Home/Home.jsx";
+import N5 from "../Screens/N5/N5.jsx";
 import NotFoundPage from "../Screens/NotFoundPage/NotFoundPage.jsx";
 
 class Layout extends Component {
@@ -15,6 +16,7 @@ class Layout extends Component {
 
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/N5" element={<N5 />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Box>
