@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from "react";
+import React, { Component, Fragment } from "react";
 import { Box, Center, DrawerBody, DrawerHeader, Heading, VStack } from "@chakra-ui/react";
 
 import N5UploaderItem from "./N5UploaderItem.jsx";

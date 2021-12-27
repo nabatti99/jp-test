@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
   Box,
   Center,
@@ -12,26 +13,28 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { colorWithOpacity } from "../../../utilities/colorGenerator";
+import { changeTest } from "../../../redux/actions";
 
 import N5Uploader from "../N5Uploader/N5Uploader.jsx";
-import { Link } from "react-router-dom";
 
-class N5Test extends Component {
+class N5Units extends Component {
   state = {
     units: new Array(),
     isUploading: false,
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log("Did Update");
-    // console.log(prevState);
-    // console.log(this.state);
+    // Update content after uploaded
+    if (this.state.isUploading == false && prevState.isUploading == true) this.getUnitData();
   }
 
   componentDidMount() {
+    this.getUnitData();
+  }
+
+  getUnitData = () => {
     window.nativeAPI
-      .readDir("N5")
+      .readDir(this.props.level)
       .then((unitFolders) => {
         const unitWorks = unitFolders.map((unitFolder) => {
           const unit = {
@@ -48,10 +51,10 @@ class N5Test extends Component {
         return Promise.all(unitWorks);
       })
       .then((units) => this.setState({ units }));
-  }
+  };
 
   getTestsInUnit = async (unitFolder) => {
-    return window.nativeAPI.readDir("N5", unitFolder).then((testFolders) => {
+    return window.nativeAPI.readDir(this.props.level, unitFolder).then((testFolders) => {
       const testWorks = testFolders.map((testFolder) => ({
         title: testFolder,
         summary: `${testFolder}_summary.json`,
@@ -67,6 +70,7 @@ class N5Test extends Component {
 
   handleDrawerClosed = () => {
     this.setState({ isUploading: false });
+    this.getUnitData();
   };
 
   render() {
@@ -75,37 +79,37 @@ class N5Test extends Component {
         <SimpleGrid columns={5} gap={4} paddingTop={16}>
           {/* Need to make component */}
           {this.state.units.map((unit, index) => (
-            <Link to={`unit/${unit.title}`} key={unit.title}>
-              <Box
-                paddingY={4}
-                paddingX={8}
-                borderRadius="lg"
-                borderWidth={1}
-                borderColor="transparent"
-                role="group"
-                _hover={{ borderColor: `teal.500` }}
-                transitionDuration="0.24s"
-                cursor="pointer"
-              >
-                <VStack>
-                  <Center
-                    width={24}
-                    height={24}
-                    borderRadius="full"
-                    backgroundColor={`teal.50`}
-                    _groupHover={{ backgroundColor: `teal.100` }}
-                    transitionDuration="0.24s"
-                  >
-                    <Heading as="h3" size="lg" textColor={`teal.600`} letterSpacing="tight">
-                      {index + 1 < 10 ? `0${index + 1}` : index + 1}
-                    </Heading>
-                  </Center>
-                  <Text fontWeight="bold" textColor={`teal.500`} paddingTop={2}>
-                    {unit.title}
-                  </Text>
-                </VStack>
-              </Box>
-            </Link>
+            <Box
+              key={unit.title}
+              paddingY={4}
+              paddingX={8}
+              borderRadius="lg"
+              borderWidth={1}
+              borderColor="transparent"
+              role="group"
+              _hover={{ borderColor: `teal.500` }}
+              transitionDuration="0.24s"
+              cursor="pointer"
+              onClick={() => this.props.changeTest(this.props.level, unit.title, null)}
+            >
+              <VStack>
+                <Center
+                  width={24}
+                  height={24}
+                  borderRadius="full"
+                  backgroundColor={`teal.50`}
+                  _groupHover={{ backgroundColor: `teal.100` }}
+                  transitionDuration="0.24s"
+                >
+                  <Heading as="h3" size="lg" textColor={`teal.600`} letterSpacing="tight">
+                    {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                  </Heading>
+                </Center>
+                <Text fontWeight="bold" textColor={`teal.500`} paddingTop={2}>
+                  {unit.title}
+                </Text>
+              </VStack>
+            </Box>
           ))}
         </SimpleGrid>
 
@@ -122,4 +126,12 @@ class N5Test extends Component {
   }
 }
 
-export default N5Test;
+const mapStateToProps = (state) => ({
+  level: state.level,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(N5Units);

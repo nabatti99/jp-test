@@ -19,12 +19,12 @@ const createWindow = () => {
     width: 1200,
     height: 1000,
     webPreferences: {
-      preload: _PRELOAD_WEBPACK_ENTRY,
+      preload: JP_TEST_PRELOAD_WEBPACK_ENTRY,
     },
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(_WEBPACK_ENTRY);
+  mainWindow.loadURL(JP_TEST_WEBPACK_ENTRY);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
@@ -79,4 +79,7 @@ app.on("activate", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-ipcMain.handle("getAppPath", (event) => app.getAppPath());
+ipcMain.handle("getAppPath", (event) => {
+  if (app.isPackaged) return path.join(app.getPath("appData"), "JP Test");
+  return app.getAppPath();
+});

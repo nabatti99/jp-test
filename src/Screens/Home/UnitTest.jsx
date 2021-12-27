@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Box, Center, Container, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+
+import { navigate } from "../../redux/actions";
 
 class UnitTest extends Component {
   tests = [
@@ -44,38 +46,37 @@ class UnitTest extends Component {
 
           <SimpleGrid columns={5} spacing={4} paddingTop={8}>
             {this.tests.map((test) => (
-              <Link to={test.name} key={test.name}>
-                <Box
-                  paddingY={4}
-                  paddingX={8}
-                  key={test.name}
-                  borderRadius="lg"
-                  borderWidth={1}
-                  borderColor="transparent"
-                  role="group"
-                  _hover={{ borderColor: `${test.colorTheme}.500` }}
-                  transitionDuration="0.24s"
-                  cursor="pointer"
-                >
-                  <VStack>
-                    <Center
-                      width={24}
-                      height={24}
-                      borderRadius="full"
-                      backgroundColor={`${test.colorTheme}.50`}
-                      _groupHover={{ backgroundColor: `${test.colorTheme}.100` }}
-                      transitionDuration="0.24s"
-                    >
-                      <Heading as="h3" size="md" textColor={`${test.colorTheme}.600`} letterSpacing="tight">
-                        {test.name}
-                      </Heading>
-                    </Center>
-                    <Text fontWeight="bold" textColor={`${test.colorTheme}.500`} paddingTop={2} paddingBottom={4}>
-                      {test.subtitle}
-                    </Text>
-                  </VStack>
-                </Box>
-              </Link>
+              <Box
+                paddingY={4}
+                paddingX={8}
+                key={test.name}
+                borderRadius="lg"
+                borderWidth={1}
+                borderColor="transparent"
+                role="group"
+                _hover={{ borderColor: `${test.colorTheme}.500` }}
+                transitionDuration="0.24s"
+                cursor="pointer"
+                onClick={() => this.props.navigate(test.name)}
+              >
+                <VStack>
+                  <Center
+                    width={24}
+                    height={24}
+                    borderRadius="full"
+                    backgroundColor={`${test.colorTheme}.50`}
+                    _groupHover={{ backgroundColor: `${test.colorTheme}.100` }}
+                    transitionDuration="0.24s"
+                  >
+                    <Heading as="h3" size="md" textColor={`${test.colorTheme}.600`} letterSpacing="tight">
+                      {test.name}
+                    </Heading>
+                  </Center>
+                  <Text fontWeight="bold" textColor={`${test.colorTheme}.500`} paddingTop={2} paddingBottom={4}>
+                    {test.subtitle}
+                  </Text>
+                </VStack>
+              </Box>
             ))}
           </SimpleGrid>
         </VStack>
@@ -84,4 +85,8 @@ class UnitTest extends Component {
   }
 }
 
-export default UnitTest;
+const mapDispatchToProps = (dispatch) => ({
+  navigate: (screenName) => dispatch(navigate(screenName)),
+});
+
+export default connect(null, mapDispatchToProps)(UnitTest);

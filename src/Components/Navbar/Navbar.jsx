@@ -1,53 +1,53 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
-import { Button, Container, HStack, Link } from "@chakra-ui/react";
+import { connect } from "react-redux";
+import { Button, Container, HStack } from "@chakra-ui/react";
+
+import { navigate } from "../../redux/actions";
 
 class Navbar extends Component {
-  addresses = {
-    Home: {
-      path: "/",
+  screens = [
+    {
+      name: "Home",
       isAvailable: true,
     },
-    N5: {
-      path: "/N5",
+    {
+      name: "N5",
       isAvailable: true,
     },
-    N4: {
-      path: "/N4",
+    {
+      name: "N4",
       isAvailable: true,
     },
-    N3: {
-      path: "/N3",
+    {
+      name: "N3",
       isAvailable: false,
     },
-    N2: {
-      path: "/N2",
+    {
+      name: "N2",
       isAvailable: false,
     },
-    N1: {
-      path: "/N1",
+    {
+      name: "N1",
       isAvailable: false,
     },
-  };
+  ];
 
   render() {
     return (
       <Container maxWidth="container.lg">
         <HStack spacing={4} justify="center" marginTop={4}>
-          {Object.keys(this.addresses).map((addressKey) => (
-            <NavLink to={this.addresses[addressKey].path} key={addressKey}>
-              {({ isActive }) => (
-                <Button
-                  variant="ghost"
-                  colorScheme="teal"
-                  backgroundColor={isActive ? "teal.50" : null}
-                  disabled={!this.addresses[addressKey].isAvailable}
-                  size="sm"
-                >
-                  {addressKey}
-                </Button>
-              )}
-            </NavLink>
+          {this.screens.map((screen) => (
+            <Button
+              key={screen.name}
+              variant="ghost"
+              colorScheme="teal"
+              backgroundColor={this.props.screenName == screen.name ? "teal.50" : null}
+              disabled={!screen.isAvailable}
+              size="sm"
+              onClick={() => this.props.navigate(screen.name)}
+            >
+              {screen.name}
+            </Button>
           ))}
         </HStack>
       </Container>
@@ -55,4 +55,12 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  screenName: state.screenName,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  navigate: (screenName) => dispatch(navigate(screenName)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

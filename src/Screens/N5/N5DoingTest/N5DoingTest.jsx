@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { connect } from "react-redux";
 import { Button, Heading, HStack, Slide, VStack } from "@chakra-ui/react";
 
 import N5TestQuestion from "./N5TestQuestion.jsx";
 import N5Result from "./N5Result.jsx";
 import N5Clock from "./N5Clock.jsx";
 
-function N5DoingTest() {
-  const { unitTitle, testTitle } = useParams();
+function N5DoingTest(props) {
+  const { level, unitTitle, testTitle } = props;
 
   const [checklist, setChecklist] = useState(new Array());
   const [timer, setTimer] = useState({
@@ -127,7 +127,7 @@ function N5DoingTest() {
 
   useEffect(() => {
     async function getTestData() {
-      const testData = await window.nativeAPI.readTest("N5", unitTitle, testTitle);
+      const testData = await window.nativeAPI.readTest(level, unitTitle, testTitle);
       console.log(testData);
 
       const newChecklist = new Array();
@@ -282,4 +282,10 @@ function N5DoingTest() {
   );
 }
 
-export default N5DoingTest;
+const mapStateToProps = (state) => ({
+  level: state.level,
+  unitTitle: state.unit,
+  testTitle: state.test,
+});
+
+export default connect(mapStateToProps)(N5DoingTest);

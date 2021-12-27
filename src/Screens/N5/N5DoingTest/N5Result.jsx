@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { connect } from "react-redux";
 import {
   Button,
   Heading,
@@ -14,7 +15,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
 
 function N5Result(props) {
   const { isShowed, numTrueAnswers, numQuestions } = props.info;
@@ -23,20 +23,20 @@ function N5Result(props) {
     isOpen: isShowed,
   });
 
-  const { unitTitle, testTitle } = useParams();
+  const { level, unitTitle, testTitle } = props;
   const [text, setText] = useState("Saving your result...");
 
   useMemo(() => {
     if (isShowed) {
       window.nativeAPI
-        .readSummary("N5", unitTitle, testTitle)
+        .readSummary(level, unitTitle, testTitle)
         .then((summary) => {
           summary.history = {
             numTrueAnswers,
             numQuestions,
             time: new Date(),
           };
-          return window.nativeAPI.saveJSON("N5", unitTitle, testTitle, "summary", summary);
+          return window.nativeAPI.saveJSON(level, unitTitle, testTitle, "summary", summary);
         })
         .then(() => setText("Your result has been saved!"))
         .catch((error) => console.error(error));
@@ -106,4 +106,10 @@ function N5Result(props) {
   );
 }
 
-export default N5Result;
+const mapStateToProps = (state) => ({
+  level: state.level,
+  unitTitle: state.unit,
+  testTitle: state.test,
+});
+
+export default connect(mapStateToProps)(N5Result);

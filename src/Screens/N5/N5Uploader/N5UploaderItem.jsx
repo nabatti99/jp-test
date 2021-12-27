@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Box, Button, FormControl, Heading, HStack, Input, Select, Text } from "@chakra-ui/react";
 
 /**
@@ -42,7 +43,7 @@ class N5UploaderItem extends Component {
 
       const testFolder = await window.nativeAPI.saveJSON(
         // Save test data
-        "N5",
+        this.props.level,
         this.state.unit,
         this.state.name, // Save to <Test Name> Folder
         this.state.name, // JSON file name is the same name with the test folder
@@ -55,7 +56,7 @@ class N5UploaderItem extends Component {
 
       await window.nativeAPI.saveJSON(
         // Save summary
-        "N5",
+        this.props.level,
         this.state.unit,
         this.state.name,
         "summary",
@@ -170,4 +171,8 @@ class N5UploaderItem extends Component {
   }
 }
 
-export default N5UploaderItem;
+const mapStateToProps = (state) => ({
+  level: state.level,
+});
+
+export default connect(mapStateToProps)(N5UploaderItem);

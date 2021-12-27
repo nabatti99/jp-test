@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import React, { Component } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
 
 import Navbar from "../Components/Navbar/Navbar.jsx";
 import Home from "../Screens/Home/Home.jsx";
@@ -9,24 +9,28 @@ import NotFoundPage from "../Screens/NotFoundPage/NotFoundPage.jsx";
 
 class Layout extends Component {
   render() {
-    return (
-      <Router>
-        <Box width="100%">
-          <Navbar />
+    let screen = <NotFoundPage />;
+    switch (this.props.screenName) {
+      case "Home":
+        screen = <Home />;
+        break;
+      case "N5":
+        screen = <N5 />;
+        break;
+    }
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/N5" element={<N5 />}>
-              <Route path="unit/:unitTitle" element={<N5 />}>
-                <Route path="test/:testTitle" element={<N5 />} />
-              </Route>
-            </Route>
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Box>
-      </Router>
+    return (
+      <Box width="100%">
+        <Navbar />
+
+        {screen}
+      </Box>
     );
   }
 }
 
-export default Layout;
+const mapStateToProps = (state) => ({
+  screenName: state.screenName,
+});
+
+export default connect(mapStateToProps)(Layout);

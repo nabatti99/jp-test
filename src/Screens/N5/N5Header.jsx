@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Box, Button, Center, Container, Heading, HStack, Text, VStack } from "@chakra-ui/react";
-import { Link, useParams } from "react-router-dom";
+
+import { changeTest } from "../../redux/actions";
 
 function N5Header(props) {
-  const { unitTitle, testTitle } = useParams();
+  const { unitTitle, changeTest } = props;
 
   return (
     <HStack spacing={12} alignItems="start">
@@ -25,11 +27,9 @@ function N5Header(props) {
             Want to learning
           </Button>
           {unitTitle && (
-            <Link to="/N5">
-              <Button variant="outline" colorScheme="teal">
-                Back to Units
-              </Button>
-            </Link>
+            <Button variant="outline" colorScheme="teal" onClick={() => changeTest("N5", null, null)}>
+              Back to Units
+            </Button>
           )}
         </HStack>
       </VStack>
@@ -37,4 +37,13 @@ function N5Header(props) {
   );
 }
 
-export default N5Header;
+const mapStateToProps = (state) => ({
+  level: state.level,
+  unitTitle: state.unit,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(N5Header);
