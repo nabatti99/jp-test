@@ -1,4 +1,4 @@
-const { app, BrowserWindow, session } = require("electron");
+const { app, BrowserWindow, session, ipcMain } = require("electron");
 const path = require("path");
 
 // Get React Dev Tools path
@@ -43,6 +43,20 @@ app.on("ready", () => {
       createWindow();
     })
     .catch((error) => console.error(error));
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [
+          "img-src blob:",
+          "media-src blob:",
+          "default-src 'self' 'unsafe-inline' data:",
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:",
+        ].join(";"),
+      },
+    });
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -64,3 +78,5 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+ipcMain.handle("getAppPath", (event) => app.getAppPath());

@@ -1,5 +1,7 @@
+const { ipcRenderer } = require("electron");
 const path = require("path");
 
-const APP_DATA_PATH = path.join("E:\\Study\\IT\\Project\\jp-test-data", "data");
-
-module.exports.APP_DATA_PATH = APP_DATA_PATH;
+module.exports.getAppDataPath = async () => {
+  const appPath = await ipcRenderer.invoke("getAppPath");
+  return path.join(appPath, "data");
+};

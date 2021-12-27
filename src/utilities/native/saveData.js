@@ -3,18 +3,23 @@ const fs = require("fs");
 const https = require("https");
 const path = require("path");
 
-const { APP_DATA_PATH } = require("./assetsManager");
+const { getAppDataPath } = require("./assetsManager");
 
-module.exports.saveJSON = async (levelFolder, unitFolder, testFolder, name, data) => {
-  const destinationFolder = path.join(APP_DATA_PATH, levelFolder, unitFolder, testFolder);
+// Save JSON file at APP_DATA_PATH/Unit/Test/Test.json
+module.exports.saveJSON = async (levelFolder, unitFolder, testFolder, fileName, data) => {
+  const appDataPath = await getAppDataPath();
+  const destinationFolder = path.join(appDataPath, levelFolder, unitFolder, testFolder);
   await prepareDirectory(destinationFolder);
 
-  await fsPromises.writeFile(path.join(destinationFolder, name), JSON.stringify(data), { encoding: "utf-8" });
-  console.log(`Saved JSON at: ${path.join(destinationFolder, name)}`);
+  await fsPromises.writeFile(path.join(destinationFolder, `${fileName}.json`), JSON.stringify(data), {
+    encoding: "utf-8",
+  });
+  console.log(`Saved JSON at: ${path.join(destinationFolder, `${fileName}.json`)}`);
 
   return destinationFolder;
 };
 
+// Save Audio file at APP_DATA_PATH/Unit/Test/AudioId/Audio.mp3
 module.exports.saveAudio = async (testFolder, id, url) => {
   const destinationFolder = path.join(testFolder, id.toString());
   await prepareDirectory(destinationFolder);
@@ -43,6 +48,7 @@ module.exports.saveAudio = async (testFolder, id, url) => {
   });
 };
 
+// Save Image file at APP_DATA_PATH/Unit/Test/ImageId/Image.png
 module.exports.saveImage = async (testFolder, id, url) => {
   const destinationFolder = path.join(testFolder, id.toString());
   await prepareDirectory(destinationFolder);
@@ -72,11 +78,13 @@ module.exports.saveImage = async (testFolder, id, url) => {
   });
 };
 
+// Prepare directory if it not exists
 const prepareDirectory = async (destinationFolder) => {
   try {
     return await fsPromises.access(destinationFolder);
   } catch (error) {
     console.error(error);
+    console.log(`Creating ${destinationFolder}`);
     return await fsPromises.mkdir(destinationFolder, { recursive: true });
   }
 };

@@ -13,9 +13,9 @@ class N5UploaderItem extends Component {
         .map((item, index) => `Unit ${index + 1}`),
       "Extended Units",
     ],
-    testTypes: ["Reading", "Listening", "Summary", "Other"],
+    testTypes: ["Reading", "Listening", "Grammar", "All Skills", "Unknown"],
 
-    name: this.props.name,
+    name: this.props.name.split(".")[0],
     testType: null,
     unit: null,
 
@@ -31,10 +31,7 @@ class N5UploaderItem extends Component {
 
     try {
       this.setState({ isSaving: true });
-      const fileData = {
-        TestType: this.state.testType,
-        Data: (await window.nativeAPI.readData(this.props.filePath)).data,
-      };
+      const fileData = (await window.nativeAPI.readJSON(this.props.filePath)).data;
       console.log(fileData);
 
       const audioParts = fileData.filter((data) => data.Mp3Temp != null);
@@ -44,15 +41,30 @@ class N5UploaderItem extends Component {
       console.log(imgParts);
 
       const testFolder = await window.nativeAPI.saveJSON(
+        // Save test data
         "N5",
         this.state.unit,
-        this.state.name.split(".")[0], // Save to <Test Name> Folder
-        this.state.name,
+        this.state.name, // Save to <Test Name> Folder
+        this.state.name, // JSON file name is the same name with the test folder
         fileData
       );
 
+      // Save assets
       await this.saveAudioList(audioParts, testFolder);
       await this.saveImageList(imgParts, testFolder);
+
+      await window.nativeAPI.saveJSON(
+        // Save summary
+        "N5",
+        this.state.unit,
+        this.state.name,
+        "summary",
+        {
+          title: this.state.name,
+          type: this.state.testType,
+          history: null,
+        }
+      );
 
       this.setState({ isSaving: false, status: "done" });
     } catch (error) {
