@@ -2,11 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Box, Button, FormControl, Heading, HStack, Input, Select, Text } from "@chakra-ui/react";
 
+import { uploadNewTest } from "../../redux/actions";
+
 /**
  * @param {String} name
  * @param {String} filePath
  */
-class N5UploaderItem extends Component {
+class UploaderItem extends Component {
   state = {
     units: [
       ...Array(25)
@@ -68,6 +70,7 @@ class N5UploaderItem extends Component {
       );
 
       this.setState({ isSaving: false, status: "done" });
+      this.props.uploadNewTest();
     } catch (error) {
       console.error(error);
       this.setState({ isSaving: false, status: "fail" });
@@ -175,4 +178,8 @@ const mapStateToProps = (state) => ({
   level: state.level,
 });
 
-export default connect(mapStateToProps)(N5UploaderItem);
+const mapDispatchToProps = (dispatch) => ({
+  uploadNewTest: () => dispatch(uploadNewTest()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UploaderItem);

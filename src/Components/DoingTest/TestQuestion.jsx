@@ -9,7 +9,7 @@ import { Box, Heading, Image, Radio, RadioGroup, SimpleGrid, Text } from "@chakr
  * @param {Object} info checklist item
  * @param {Event} onChangeAnswer (isCorrect) => {...}
  */
-class N5TestQuestion extends Component {
+class TestQuestion extends Component {
   state = {
     audioUrl: null,
     imageUrl: null,
@@ -101,4 +101,4 @@ class N5TestQuestion extends Component {
   }
 }
 
-export default memo(N5TestQuestion);
+export default memo(TestQuestion);

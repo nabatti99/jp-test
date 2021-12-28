@@ -16,7 +16,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-function N5Result(props) {
+function Result(props) {
   const { isShowed, numTrueAnswers, numQuestions } = props.info;
 
   const { isOpen, onOpen, onClose } = useDisclosure({
@@ -112,4 +112,4 @@ const mapStateToProps = (state) => ({
   testTitle: state.test,
 });
 
-export default connect(mapStateToProps)(N5Result);
+export default connect(mapStateToProps)(Result);

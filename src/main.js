@@ -18,9 +18,15 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 1000,
+    show: false,
     webPreferences: {
       preload: JP_TEST_PRELOAD_WEBPACK_ENTRY,
     },
+  });
+
+  // Show window on ready
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
   });
 
   // and load the index.html of the app.
@@ -80,6 +86,6 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle("getAppPath", (event) => {
-  if (app.isPackaged) return path.join(app.getPath("appData"), "JP Test");
+  if (app.isPackaged) return process.resourcesPath;
   return app.getAppPath();
 });

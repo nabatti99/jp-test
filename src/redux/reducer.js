@@ -5,6 +5,7 @@ const initialState = {
   level: null,
   unit: null,
   test: null,
+  timestamp: new Date(),
 };
 
 export default function reducer(state = initialState, action) {
@@ -24,6 +25,12 @@ export default function reducer(state = initialState, action) {
         level: action.level,
         unit: action.unit,
         test: action.test,
+      };
+
+    case actionTypes.UPLOAD_NEW_TEST:
+      return {
+        ...state,
+        timestamp: new Date(),
       };
 
     default:

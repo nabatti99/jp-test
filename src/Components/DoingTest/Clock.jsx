@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Heading, Slide, VStack } from "@chakra-ui/react";
 
-function N5Clock(props) {
+function Clock(props) {
   return (
     <Slide direction="right" in={props.isShowed} style={{ top: 4, right: 2, width: "12rem", height: "12rem" }}>
       <VStack
@@ -29,4 +29,4 @@ function N5Clock(props) {
   );
 }
 
-export default N5Clock;
+export default Clock;

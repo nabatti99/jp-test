@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Box, Center, Divider, Heading, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 
-import { changeTest } from "../../../redux/actions";
+import { changeTest } from "../../redux/actions";
 
-function N5Tests({ level, unitTitle, changeTest }) {
+function Tests({ level, unitTitle, changeTest, timestamp }) {
   const [tests, setTests] = useState(new Array());
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function N5Tests({ level, unitTitle, changeTest }) {
     }
 
     getTests();
-  }, []);
+  }, [timestamp]);
 
   return (
     <Box>
@@ -47,7 +47,6 @@ function N5Tests({ level, unitTitle, changeTest }) {
             borderRadius="lg"
             borderWidth={1}
             borderColor="transparent"
-            backgroundColor={`teal.50`}
             role="group"
             _hover={{ borderColor: `teal.500` }}
             transitionDuration="0.24s"
@@ -61,25 +60,29 @@ function N5Tests({ level, unitTitle, changeTest }) {
                     width={16}
                     height={16}
                     borderRadius="full"
-                    backgroundColor="teal.300"
-                    _groupHover={{ backgroundColor: "teal.500" }}
+                    backgroundColor="teal.50"
+                    borderWidth={1}
+                    borderColor="transparent"
+                    _groupHover={{ borderColor: "teal.500" }}
                     transitionDuration="0.24s"
                   >
-                    <Heading as="h3" size="lg" textColor="white" letterSpacing="tight">
+                    <Heading as="h3" fontSize="lg" textColor="teal.500" letterSpacing="tight">
                       {index + 1 < 10 ? `0${index + 1}` : index + 1}
                     </Heading>
                   </Center>
                 </Center>
                 <Box
                   paddingX="2"
-                  backgroundColor="teal.300"
-                  _groupHover={{ backgroundColor: "teal.500" }}
+                  backgroundColor="teal.50"
+                  borderWidth={1}
+                  borderColor="transparent"
+                  _groupHover={{ borderColor: "teal.500" }}
                   transitionDuration="0.24s"
                 >
                   <Text
                     fontWeight="bold"
                     fontSize="0.6rem"
-                    textColor="white"
+                    textColor="teal.500"
                     textAlign="center"
                     letterSpacing="wider"
                     style={{ textTransform: "uppercase" }}
@@ -96,7 +99,7 @@ function N5Tests({ level, unitTitle, changeTest }) {
                 <Divider borderColor="teal.500" />
 
                 <Box>
-                  <Text fontWeight="bold" fontSize="sm" textColor="teal.400">
+                  <Text fontWeight="bold" fontSize="sm" textColor="gray.500">
                     {test.history ? `Done at: ${new Date().toDateString()}` : "Haven't done yet"}
                   </Text>
                   {test.history && (
@@ -117,10 +120,11 @@ function N5Tests({ level, unitTitle, changeTest }) {
 const mapStateToProps = (state) => ({
   level: state.level,
   unitTitle: state.unit,
+  timestamp: state.timestamp,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(N5Tests);
+export default connect(mapStateToProps, mapDispatchToProps)(Tests);

@@ -15,3 +15,9 @@ export function changeTest(level, unit, test) {
     test,
   };
 }
+
+export function uploadNewTest() {
+  return {
+    type: actionTypes.UPLOAD_NEW_TEST,
+  };
+}

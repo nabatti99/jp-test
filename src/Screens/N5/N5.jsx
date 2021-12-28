@@ -1,37 +1,49 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { Box, Container } from "@chakra-ui/react";
 
 import N5Header from "./N5Header.jsx";
-import N5Units from "./N5Categories/N5Units.jsx";
-import N5Tests from "./N5Categories/N5Tests.jsx";
-import N5DoingTest from "./N5DoingTest/N5DoingTest.jsx";
+import Units from "../../Components/Categories/Units.jsx";
+import Tests from "../../Components/Categories/Tests.jsx";
+import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
 
 import { changeTest } from "../../redux/actions.js";
+import Uploader from "../../Components/Uploader/Uploader.jsx";
 
 function N5(props) {
   const { level, unitTitle, testTitle, changeTest } = props;
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleEndUploaded = () => {
+    setIsUploading(false);
+  };
+
+  const handleBeginUploaded = () => {
+    setIsUploading(true);
+  };
 
   useEffect(() => {
     if (level != "N5") changeTest("N5", null, null);
   }, [level]);
 
-  let render = null;
+  let contain = null;
   if (level == "N5")
-    if (testTitle) render = <N5DoingTest />;
+    if (testTitle) contain = <DoingTest />;
     else
-      render = (
+      contain = (
         <Fragment>
           <N5Header />
-          {unitTitle && <N5Tests />}
-          {!(unitTitle || testTitle) && <N5Units />}
+          {unitTitle && <Tests />}
+          {!(unitTitle || testTitle) && <Units />}
+          <Uploader isOpen={isUploading} onBeginUpload={handleBeginUploaded} onEndUpload={handleEndUploaded} />
         </Fragment>
       );
 
+  console.log("Render N5");
   return (
-    <Box>
+    <Box onDragOver={handleBeginUploaded}>
       <Container maxWidth="container.lg" marginTop={8}>
-        {render}
+        {contain}
       </Container>
     </Box>
   );

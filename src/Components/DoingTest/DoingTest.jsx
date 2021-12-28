@@ -2,11 +2,11 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Heading, HStack, Slide, VStack } from "@chakra-ui/react";
 
-import N5TestQuestion from "./N5TestQuestion.jsx";
-import N5Result from "./N5Result.jsx";
-import N5Clock from "./N5Clock.jsx";
+import TestQuestion from "./TestQuestion.jsx";
+import Result from "./Result.jsx";
+import N5Clock from "./Clock.jsx";
 
-function N5DoingTest(props) {
+function DoingTest(props) {
   const { level, unitTitle, testTitle } = props;
 
   const [checklist, setChecklist] = useState(new Array());
@@ -203,7 +203,7 @@ function N5DoingTest(props) {
       );
     else {
       return (
-        <N5TestQuestion
+        <TestQuestion
           key={item.ID}
           question={item.question}
           answers={item.answers}
@@ -277,7 +277,7 @@ function N5DoingTest(props) {
 
       <N5Clock timeDisplay={timeDisplay} isShowed={timer.isShowed} onEndTimeClick={stopAndShowResult} />
 
-      <N5Result info={result} onClose={handleClosedResult} />
+      <Result info={result} onClose={handleClosedResult} />
     </Fragment>
   );
 }
@@ -288,4 +288,4 @@ const mapStateToProps = (state) => ({
   testTitle: state.test,
 });
 
-export default connect(mapStateToProps)(N5DoingTest);
+export default connect(mapStateToProps)(DoingTest);

@@ -1,31 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  Box,
-  Center,
-  Drawer,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerOverlay,
-  Heading,
-  SimpleGrid,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Center, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 
-import { changeTest } from "../../../redux/actions";
+import { changeTest } from "../../redux/actions";
 
-import N5Uploader from "../N5Uploader/N5Uploader.jsx";
+import Uploader from "../Uploader/Uploader.jsx";
 
-class N5Units extends Component {
+class Units extends Component {
   state = {
     units: new Array(),
-    isUploading: false,
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // Update content after uploaded
-    if (this.state.isUploading == false && prevState.isUploading == true) this.getUnitData();
+    if (prevProps.timestamp != this.props.timestamp) this.getUnitData();
   }
 
   componentDidMount() {
@@ -64,63 +52,56 @@ class N5Units extends Component {
     });
   };
 
-  handleDraggedData = (event) => {
-    this.setState({ isUploading: true });
-  };
-
-  handleDrawerClosed = () => {
-    this.setState({ isUploading: false });
-    this.getUnitData();
-  };
-
   render() {
+    console.log("Render Units");
     return (
-      <Box onDragOver={this.handleDraggedData}>
+      <Box>
         <SimpleGrid columns={5} gap={4} paddingTop={16}>
           {/* Need to make component */}
           {this.state.units.map((unit, index) => (
             <Box
               key={unit.title}
-              paddingY={4}
-              paddingX={8}
-              borderRadius="lg"
+              borderRadius="xl"
+              role="group"
+              backgroundColor="teal.50"
               borderWidth={1}
               borderColor="transparent"
-              role="group"
-              _hover={{ borderColor: `teal.500` }}
+              _hover={{ borderColor: "teal.500" }}
               transitionDuration="0.24s"
               cursor="pointer"
+              overflow="hidden"
               onClick={() => this.props.changeTest(this.props.level, unit.title, null)}
             >
-              <VStack>
-                <Center
-                  width={24}
-                  height={24}
-                  borderRadius="full"
-                  backgroundColor={`teal.50`}
-                  _groupHover={{ backgroundColor: `teal.100` }}
-                  transitionDuration="0.24s"
-                >
-                  <Heading as="h3" size="lg" textColor={`teal.600`} letterSpacing="tight">
-                    {index + 1 < 10 ? `0${index + 1}` : index + 1}
-                  </Heading>
+              <VStack alignItems="stretch">
+                <Center paddingTop={4}>
+                  <Center
+                    width={24}
+                    height={24}
+                    borderRadius="full"
+                    borderWidth={1}
+                    borderColor="transparent"
+                    _groupHover={{ borderColor: "teal.500" }}
+                    transitionDuration="0.24s"
+                  >
+                    <Heading as="h3" size="lg" textColor={`teal.600`} letterSpacing="tight">
+                      {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                    </Heading>
+                  </Center>
                 </Center>
-                <Text fontWeight="bold" textColor={`teal.500`} paddingTop={2}>
+                <Text
+                  fontWeight="bold"
+                  textColor="white"
+                  textAlign="center"
+                  backgroundColor="teal.500"
+                  paddingTop={2}
+                  paddingBottom={4}
+                >
                   {unit.title}
                 </Text>
               </VStack>
             </Box>
           ))}
         </SimpleGrid>
-
-        <Drawer placement="bottom" isOpen={this.state.isUploading}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton onClick={this.handleDrawerClosed} />
-
-            <N5Uploader onDone={this.handleDrawerClosed} />
-          </DrawerContent>
-        </Drawer>
       </Box>
     );
   }
@@ -128,10 +109,11 @@ class N5Units extends Component {
 
 const mapStateToProps = (state) => ({
   level: state.level,
+  timestamp: state.timestamp,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(N5Units);
+export default connect(mapStateToProps, mapDispatchToProps)(Units);
