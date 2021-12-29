@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Box, Container } from "@chakra-ui/react";
 
-import N5Header from "./N5Header.jsx";
+import N4Header from "./N4Header.jsx";
 import Units from "../../Components/Categories/Units.jsx";
 import Tests from "../../Components/Categories/Tests.jsx";
 import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
@@ -10,7 +10,7 @@ import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
 import { changeTest } from "../../redux/actions.js";
 import Uploader from "../../Components/Uploader/Uploader.jsx";
 
-function N5(props) {
+function N4(props) {
   const { level, unitTitle, testTitle, changeTest } = props;
   const [isUploading, setIsUploading] = useState(false);
 
@@ -23,25 +23,25 @@ function N5(props) {
   };
 
   useEffect(() => {
-    if (level != "N5") changeTest("N5", null, null);
+    if (level != "N4") changeTest("N4", null, null);
   }, [level]);
 
   let contain = null;
-  if (level == "N5")
-    if (testTitle) contain = <DoingTest colorScheme="teal" />;
+  if (level == "N4")
+    if (testTitle) contain = <DoingTest colorScheme="blue" />;
     else
       contain = (
         <Fragment>
-          <N5Header />
-          {unitTitle && <Tests colorScheme="teal" />}
-          {!(unitTitle || testTitle) && <Units colorScheme="teal" />}
+          <N4Header />
+          {unitTitle && <Tests colorScheme="blue" />}
+          {!(unitTitle || testTitle) && <Units colorScheme="blue" />}
           <Uploader isOpen={isUploading} onBeginUpload={handleBeginUploaded} onEndUpload={handleEndUploaded} />
         </Fragment>
       );
 
   return (
     <Box onDragOver={handleBeginUploaded}>
-      <Container maxWidth="container.xl" marginTop={8}>
+      <Container maxWidth="container.lg" marginTop={8}>
         {contain}
       </Container>
     </Box>
@@ -58,4 +58,4 @@ const mapDispatchToProps = (dispatch) => ({
   changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(N5);
+export default connect(mapStateToProps, mapDispatchToProps)(N4);

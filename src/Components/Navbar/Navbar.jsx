@@ -20,7 +20,7 @@ class Navbar extends Component {
     },
     {
       name: "N3",
-      isAvailable: false,
+      isAvailable: true,
     },
     {
       name: "N2",

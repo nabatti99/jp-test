@@ -10,26 +10,31 @@ class UnitTest extends Component {
       name: "N5",
       subtitle: "JLPT N5",
       colorTheme: "teal",
+      isAvailable: true,
     },
     {
       name: "N4",
       subtitle: "JLPT N4",
       colorTheme: "blue",
+      isAvailable: true,
     },
     {
       name: "N3",
       subtitle: "JLPT N3",
       colorTheme: "green",
+      isAvailable: true,
     },
     {
       name: "N2",
       subtitle: "JLPT N2",
       colorTheme: "purple",
+      isAvailable: false,
     },
     {
       name: "N1",
       subtitle: "JLPT N1",
       colorTheme: "red",
+      isAvailable: false,
     },
   ];
 
@@ -56,8 +61,8 @@ class UnitTest extends Component {
                 role="group"
                 _hover={{ borderColor: `${test.colorTheme}.500` }}
                 transitionDuration="0.24s"
-                cursor="pointer"
-                onClick={() => this.props.navigate(test.name)}
+                cursor={test.isAvailable ? "pointer" : "not-allowed"}
+                onClick={() => test.isAvailable && this.props.navigate(test.name)}
               >
                 <VStack>
                   <Center

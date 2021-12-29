@@ -6,14 +6,18 @@ import TestQuestion from "./TestQuestion.jsx";
 import Result from "./Result.jsx";
 import N5Clock from "./Clock.jsx";
 
-function DoingTest(props) {
-  const { level, unitTitle, testTitle } = props;
+const testType = {
+  NORMAL: "NORMAL",
+  NO_TIMING: "NO_TIMING",
+};
 
+function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
   const [checklist, setChecklist] = useState(new Array());
   const [timer, setTimer] = useState({
     isShowed: false,
     timerClock: null,
     value: 0,
+    isAllowAddMoreTime: false,
   });
 
   const [result, setResult] = useState({
@@ -22,7 +26,7 @@ function DoingTest(props) {
     numQuestions: 0,
   });
   const [session, setSession] = useState({
-    isDoing: false,
+    isTiming: false,
     isDone: false,
     doingTestType: null,
   });
@@ -33,23 +37,29 @@ function DoingTest(props) {
     checklist[questionIndex] = {
       guessAnswer,
       isCorrect,
-      isShowedAnswer: session.doingTestType == "Answer Directly",
+      isShowedAnswer: session.doingTestType == testType.NO_TIMING,
     };
     setChecklist(Array.from(checklist));
-
-    console.log(checklist);
   };
 
   const handleStartedTest = () => {
     setSession({
-      isDoing: true,
+      isTiming: true,
       isDone: false,
-      doingTestType: "Normally",
+      doingTestType: testType.NORMAL,
     });
 
     setTimer({
       ...timer,
       isShowed: true,
+    });
+  };
+
+  const handleStartedNoTiming = () => {
+    setSession({
+      isTiming: false,
+      isDone: true,
+      doingTestType: testType.NO_TIMING,
     });
   };
 
@@ -60,15 +70,25 @@ function DoingTest(props) {
     });
   };
 
+  const handleAddMoreTime = () => {
+    const unDoneQuestions = checklist.filter((item) => item.guessAnswer == "");
+    setTimer({
+      // Add one minute per an undone question
+      ...timer,
+      value: timer.value + unDoneQuestions.length * 60,
+    });
+  };
+
   const cleanAndPrepareTest = () => {
     setTimer({
       timerClock: null,
       value: checklist.length * 60, // 1 question ~ 1 minute
       isShowed: false,
+      isAllowAddMoreTime: false,
     });
 
     setSession({
-      isDoing: false,
+      isTiming: false,
       isDone: false,
       doingTestType: null,
     });
@@ -80,13 +100,14 @@ function DoingTest(props) {
     console.log(timer);
     setTimer({
       ...timer,
+      value: 0,
       isShowed: false,
     });
 
     setSession({
       ...session,
       isDone: true,
-      isDoing: false,
+      isTiming: false,
     });
 
     setResult({
@@ -105,9 +126,12 @@ function DoingTest(props) {
         // Make a new Clock
         const newClock = setInterval(() => {
           const count = timer.value - 1;
+          const isAllowAddMoreTime = count < 5 * 60; // Allow add more time when 5 minutes left
+
           setTimer(() => ({
             ...timer,
             value: count,
+            isAllowAddMoreTime,
           }));
 
           if (count == 0) stopAndShowResult();
@@ -173,13 +197,13 @@ function DoingTest(props) {
       setTestData(parsedTestData);
 
       setTimer({
-        timerClock: null,
+        ...timer,
         value: newChecklist.length * 60, // 1 question ~ 1 minute
-        isShowed: false,
+        // value: 60, // Test
       });
 
       setSession({
-        isDoing: false,
+        isTiming: false,
         doingTestType: null,
         isDone: false,
       });
@@ -199,17 +223,19 @@ function DoingTest(props) {
           dangerouslySetInnerHTML={{ __html: item.content }}
           paddingTop={item.isAdditionHeader == 2 ? 8 : 0}
           paddingBottom={4}
+          className="animate__animated animate__fadeIn"
         ></Heading>
       );
     else {
       return (
         <TestQuestion
           key={item.ID}
+          colorScheme={colorScheme}
           question={item.question}
           answers={item.answers}
           audio={item.audio}
           image={item.image}
-          isDoing={session.isDoing}
+          isDoing={session.isTiming}
           info={checklist[item.questionIndex]}
           onChangeAnswer={(guessAnswer, isCorrect) =>
             handleGuessChangedAnswer(guessAnswer, isCorrect, item.questionIndex)
@@ -221,14 +247,14 @@ function DoingTest(props) {
 
   // Control buttons
   let buttons = null;
-  if (session.isDoing == false)
+  if (session.isTiming == false)
     if (session.isDone == false)
       buttons = (
         <HStack paddingTop={4}>
-          <Button colorScheme="teal" variant="solid" onClick={handleStartedTest}>
+          <Button colorScheme={colorScheme} variant="solid" onClick={handleStartedTest}>
             Start now
           </Button>
-          <Button colorScheme="teal" variant="outline">
+          <Button colorScheme={colorScheme} variant="outline" onClick={handleStartedNoTiming}>
             Start no timing
           </Button>
         </HStack>
@@ -236,7 +262,7 @@ function DoingTest(props) {
     else
       buttons = (
         <HStack paddingTop={4}>
-          <Button colorScheme="teal" variant="outline" onClick={cleanAndPrepareTest}>
+          <Button colorScheme={colorScheme} variant="outline" onClick={cleanAndPrepareTest}>
             Clean and Reset
           </Button>
         </HStack>
@@ -261,11 +287,11 @@ function DoingTest(props) {
   return (
     <Fragment>
       <VStack spacing={4} alignItems="stretch">
-        <VStack backgroundColor="teal.50" borderRadius="lg" paddingY="8" spacing={4}>
-          <Heading as="h1" textColor="teal.700" size="xl">
+        <VStack backgroundColor={`${colorScheme}.50`} borderRadius="lg" paddingY="8" spacing={4}>
+          <Heading as="h1" textColor={`${colorScheme}.700`} size="xl">
             {testTitle}
           </Heading>
-          <Heading as="h2" textColor="teal.500" size="md">
+          <Heading as="h2" textColor={`${colorScheme}.500`} size="md">
             Time: {timeDisplay} | Questions: {checklist.length}
           </Heading>
 
@@ -275,7 +301,13 @@ function DoingTest(props) {
         <VStack alignItems="stretch">{content}</VStack>
       </VStack>
 
-      <N5Clock timeDisplay={timeDisplay} isShowed={timer.isShowed} onEndTimeClick={stopAndShowResult} />
+      <N5Clock
+        timeDisplay={timeDisplay}
+        isShowed={timer.isShowed}
+        isEnabledAddMoreTime={timer.isAllowAddMoreTime}
+        onEndTimeClick={stopAndShowResult}
+        onMoreTimeClick={handleAddMoreTime}
+      />
 
       <Result info={result} onClose={handleClosedResult} />
     </Fragment>

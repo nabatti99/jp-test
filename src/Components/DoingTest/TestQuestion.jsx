@@ -1,6 +1,8 @@
 import React, { Component, memo } from "react";
 import { Box, Heading, Image, Radio, RadioGroup, SimpleGrid, Text } from "@chakra-ui/react";
 
+import "animate.css";
+
 /**
  * @param {String} question
  * @param {Array} answers
@@ -39,11 +41,11 @@ class TestQuestion extends Component {
   }
 
   render() {
-    const { question, answers } = this.props;
+    const { question, answers, colorScheme } = this.props;
     const { guessAnswer, isCorrect, isShowedAnswer } = this.props.info;
 
     return (
-      <Box paddingBottom={4}>
+      <Box paddingBottom={4} className="animate__animated animate__fadeIn animate__slow">
         <Heading size="md" dangerouslySetInnerHTML={{ __html: question }} marginBottom={2}></Heading>
 
         <Box marginBottom={2}>
@@ -68,8 +70,8 @@ class TestQuestion extends Component {
                   backgroundColor = "red.100";
                 }
               } else if (isGuessAnswer) {
-                borderColor = "teal.500";
-                backgroundColor = "teal.50";
+                borderColor = `${colorScheme}.500`;
+                backgroundColor = `${colorScheme}.50`;
               }
 
               return (
@@ -84,7 +86,7 @@ class TestQuestion extends Component {
                 >
                   <Radio
                     value={answer.content}
-                    colorScheme={isShowedAnswer ? (isCorrect ? "green" : "red") : "teal"}
+                    colorScheme={isShowedAnswer ? (isCorrect ? "green" : "red") : `${colorScheme}`}
                     isReadOnly={isShowedAnswer}
                     borderColor={borderColor}
                     width="100%"

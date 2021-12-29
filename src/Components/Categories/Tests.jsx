@@ -4,7 +4,9 @@ import { Box, Center, Divider, Heading, HStack, SimpleGrid, Text, VStack } from 
 
 import { changeTest } from "../../redux/actions";
 
-function Tests({ level, unitTitle, changeTest, timestamp }) {
+import "animate.css";
+
+function Tests({ level, unitTitle, changeTest, colorScheme, timestamp }) {
   const [tests, setTests] = useState(new Array());
 
   useEffect(() => {
@@ -48,8 +50,9 @@ function Tests({ level, unitTitle, changeTest, timestamp }) {
             borderWidth={1}
             borderColor="transparent"
             role="group"
-            _hover={{ borderColor: `teal.500` }}
+            _hover={{ borderColor: `${colorScheme}.500` }}
             transitionDuration="0.24s"
+            className="animate__animated animate__fadeIn"
             cursor="pointer"
             onClick={() => changeTest(level, unitTitle, test.title)}
           >
@@ -60,29 +63,29 @@ function Tests({ level, unitTitle, changeTest, timestamp }) {
                     width={16}
                     height={16}
                     borderRadius="full"
-                    backgroundColor="teal.50"
+                    backgroundColor={`${colorScheme}.50`}
                     borderWidth={1}
                     borderColor="transparent"
-                    _groupHover={{ borderColor: "teal.500" }}
+                    _groupHover={{ borderColor: `${colorScheme}.500` }}
                     transitionDuration="0.24s"
                   >
-                    <Heading as="h3" fontSize="lg" textColor="teal.500" letterSpacing="tight">
+                    <Heading as="h3" size="lg" textColor={`${colorScheme}.500`} letterSpacing="tight">
                       {index + 1 < 10 ? `0${index + 1}` : index + 1}
                     </Heading>
                   </Center>
                 </Center>
                 <Box
                   paddingX="2"
-                  backgroundColor="teal.50"
+                  backgroundColor={`${colorScheme}.50`}
                   borderWidth={1}
                   borderColor="transparent"
-                  _groupHover={{ borderColor: "teal.500" }}
+                  _groupHover={{ borderColor: `${colorScheme}.500` }}
                   transitionDuration="0.24s"
                 >
                   <Text
                     fontWeight="bold"
                     fontSize="0.6rem"
-                    textColor="teal.500"
+                    textColor={`${colorScheme}.500`}
                     textAlign="center"
                     letterSpacing="wider"
                     style={{ textTransform: "uppercase" }}
@@ -92,18 +95,18 @@ function Tests({ level, unitTitle, changeTest, timestamp }) {
                 </Box>
               </VStack>
               <VStack alignItems="start" spacing={2}>
-                <Heading as="h3" fontWeight="bold" fontSize="md" textColor="teal.500" paddingTop={2}>
+                <Heading as="h3" fontWeight="bold" fontSize="md" textColor={`${colorScheme}.500`} paddingTop={2}>
                   {test.title}
                 </Heading>
 
-                <Divider borderColor="teal.500" />
+                <Divider borderColor={`${colorScheme}.500`} />
 
                 <Box>
                   <Text fontWeight="bold" fontSize="sm" textColor="gray.500">
                     {test.history ? `Done at: ${new Date().toDateString()}` : "Haven't done yet"}
                   </Text>
                   {test.history && (
-                    <Text fontWeight="bold" fontSize="sm" textColor="teal.400">
+                    <Text fontWeight="bold" fontSize="sm" textColor={`${colorScheme}.400`}>
                       Result: {`${test.history.numTrueAnswers}/${test.history.numQuestions}`}
                     </Text>
                   )}

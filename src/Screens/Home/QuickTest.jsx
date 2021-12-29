@@ -1,25 +1,34 @@
 import React, { Component } from "react";
-import { Box, Container, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+
+import VolumeIcon from "../../Components/Icons/VolumeIcon.jsx";
+import TargetIcon from "../../Components/Icons/TargetIcon.jsx";
+import GrammarCheckIcon from "../../Components/Icons/GrammarCheckIcon.jsx";
+
+import "animate.css";
 
 class QuickTest extends Component {
   tests = [
     {
       name: "Random Test",
-      icon: <Text>Text</Text>,
-      description: "Randomly pick questions in some JLPT levels with your choice.",
+      icon: <TargetIcon boxSize={12} color="teal.700" />,
+      description: "Randomly pick questions in your choice JLPT level.",
       colorTheme: "teal",
+      isWorking: false,
     },
     {
-      name: "Random Test 1",
-      icon: <Text>Text</Text>,
-      description: "Randomly pick questions in some JLPT levels with your choice.",
+      name: "Listening Test",
+      icon: <VolumeIcon boxSize={12} color="gray.700" />,
+      description: "Randomly pick audio questions in your choice JLPT level.",
       colorTheme: "gray",
+      isWorking: false,
     },
     {
-      name: "Random Test 2",
-      icon: <Text>Text</Text>,
-      description: "Randomly pick questions in some JLPT levels with your choice.",
+      name: "Grammar Test",
+      icon: <GrammarCheckIcon boxSize={12} color="orange.700" />,
+      description: "Randomly pick grammar questions in some JLPT levels with your choice.",
       colorTheme: "orange",
+      isWorking: false,
     },
   ];
 
@@ -35,26 +44,37 @@ class QuickTest extends Component {
           </Heading>
 
           <SimpleGrid columns={3} spacing={4} paddingTop={8}>
-            {this.tests.map((test) => (
+            {this.tests.map((test, index) => (
               <Box
                 borderRadius="md"
                 borderWidth={1}
                 borderColor="transparent"
                 backgroundColor={`${test.colorTheme}.50`}
-                height="12rem"
                 key={test.name}
                 _hover={{ borderColor: `${test.colorTheme}.500` }}
                 transitionDuration="0.24s"
                 cursor="pointer"
+                className={`animate__animated animate__fadeInUp animate__delay-${index}s`}
               >
-                <VStack alignItems="start" margin={4}>
-                  {test.icon}
-                  <Heading as="h3" size="md" textColor={`${test.colorTheme}.600`} letterSpacing="tight">
+                <VStack alignItems="stretch" margin={4}>
+                  <Box>{test.icon}</Box>
+                  <Heading
+                    as="h3"
+                    size="md"
+                    textColor={`${test.colorTheme}.600`}
+                    letterSpacing="tight"
+                    paddingTop={2}
+                  >
                     {test.name}
                   </Heading>
                   <Text fontWeight="medium" textColor={`${test.colorTheme}.400`}>
                     {test.description}
                   </Text>
+                  <Flex justifyContent="end">
+                    <Button variant="link" colorScheme={test.colorTheme} isDisabled={!test.isWorking}>
+                      {test.isWorking ? "Start Now" : "Coming Soon"}
+                    </Button>
+                  </Flex>
                 </VStack>
               </Box>
             ))}

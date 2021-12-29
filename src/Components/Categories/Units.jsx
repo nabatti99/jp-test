@@ -2,9 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Box, Center, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 
+import BooksIcon from "../Icons/BooksIcon.jsx";
+import CupIcon from "../Icons/CupIcon.jsx";
+import LampDeskIcon from "../Icons/LampDeskIcon.jsx";
+import CircleXMarkIcon from "../Icons/CircleXMarkIcon.jsx";
+
 import { changeTest } from "../../redux/actions";
 
-import Uploader from "../Uploader/Uploader.jsx";
+import "animate.css";
 
 class Units extends Component {
   state = {
@@ -53,48 +58,81 @@ class Units extends Component {
   };
 
   render() {
-    console.log("Render Units");
+    const { colorScheme, level, changeTest } = this.props;
+
     return (
       <Box>
+        {this.state.units.length == 0 && (
+          <Center paddingY={16} className="animate__animated animate__fadeIn">
+            <VStack>
+              <CircleXMarkIcon boxSize={16} color="red.400" />
+              <Heading textColor="red.500" paddingTop={4}>
+                Oh no! Nothing here.
+              </Heading>
+              <Text fontWeight="medium" textColor="gray.500">
+                Drag and drop your JSON file test to upload 😇
+              </Text>
+            </VStack>
+          </Center>
+        )}
         <SimpleGrid columns={5} gap={4} paddingTop={16}>
-          {/* Need to make component */}
           {this.state.units.map((unit, index) => (
             <Box
               key={unit.title}
               borderRadius="xl"
               role="group"
-              backgroundColor="teal.50"
+              backgroundColor={`${colorScheme}.50`}
               borderWidth={1}
               borderColor="transparent"
-              _hover={{ borderColor: "teal.500" }}
+              _hover={{ borderColor: `${colorScheme}.500` }}
               transitionDuration="0.24s"
+              className="animate__animated animate__bounceIn"
               cursor="pointer"
               overflow="hidden"
-              onClick={() => this.props.changeTest(this.props.level, unit.title, null)}
+              onClick={() => changeTest(level, unit.title, null)}
             >
-              <VStack alignItems="stretch">
-                <Center paddingTop={4}>
-                  <Center
-                    width={24}
-                    height={24}
-                    borderRadius="full"
-                    borderWidth={1}
-                    borderColor="transparent"
-                    _groupHover={{ borderColor: "teal.500" }}
-                    transitionDuration="0.24s"
-                  >
-                    <Heading as="h3" size="lg" textColor={`teal.600`} letterSpacing="tight">
+              <VStack alignItems="stretch" spacing={0}>
+                <Center paddingTop={8} paddingBottom={8} position="relative" overflow="hidden">
+                  <Center>
+                    <Heading as="h3" size="2xl" textColor={`${colorScheme}.600`} letterSpacing="tight">
                       {index + 1 < 10 ? `0${index + 1}` : index + 1}
                     </Heading>
                   </Center>
+
+                  <BooksIcon
+                    boxSize={12}
+                    position="absolute"
+                    bottom={0}
+                    right={0}
+                    opacity={0.15}
+                    color={`${colorScheme}.500`}
+                  />
+
+                  <LampDeskIcon
+                    boxSize={20}
+                    position="absolute"
+                    bottom={0}
+                    left={-4}
+                    opacity={0.05}
+                    color={`${colorScheme}.500`}
+                  />
+
+                  <CupIcon
+                    boxSize={6}
+                    position="absolute"
+                    bottom={0}
+                    left={12}
+                    opacity={0.2}
+                    color={`${colorScheme}.500`}
+                  />
                 </Center>
                 <Text
                   fontWeight="bold"
                   textColor="white"
                   textAlign="center"
-                  backgroundColor="teal.500"
+                  backgroundColor={`${colorScheme}.500`}
                   paddingTop={2}
-                  paddingBottom={4}
+                  paddingBottom={2}
                 >
                   {unit.title}
                 </Text>
