@@ -30,4 +30,10 @@ module.exports = [
       },
     },
   },
+
+  // SVG loader
+  {
+    test: /\.svg$/,
+    type: "asset",
+  },
 ];

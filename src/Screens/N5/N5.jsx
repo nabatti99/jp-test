@@ -41,7 +41,7 @@ function N5(props) {
 
   return (
     <Box onDragOver={handleBeginUploaded}>
-      <Container maxWidth="container.xl" marginTop={8}>
+      <Container maxWidth="container.lg" marginTop={8}>
         {contain}
       </Container>
     </Box>

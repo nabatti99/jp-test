@@ -30,7 +30,7 @@ class Layout extends Component {
     }
 
     return (
-      <Box width="100%" className="scrollbar" height="100vh" overflowY="scroll">
+      <Box width="100%">
         <Navbar />
 
         {screen}

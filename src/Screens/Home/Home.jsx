@@ -10,13 +10,11 @@ class Home extends Component {
   render() {
     return (
       <Box>
-        <Container maxWidth="container.lg">
-          <HomeHeader />
+        <HomeHeader />
 
-          <QuickTest />
+        <QuickTest />
+        <UnitTest />
 
-          <UnitTest />
-        </Container>
         <HomeFooter />
       </Box>
     );

@@ -1,8 +1,9 @@
-.scrollbar::-webkit-scrollbar {
+body::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
   background-color: var(--chakra-colors-gray-100);
 }
 
-.scrollbar::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
   background-color: var(--chakra-colors-teal-500);
 }

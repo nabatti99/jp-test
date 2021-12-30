@@ -18,6 +18,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 1000,
+    icon: path.join(__dirname, "Icon/JP Test.ico"),
     show: false,
     webPreferences: {
       preload: JP_TEST_PRELOAD_WEBPACK_ENTRY,
@@ -32,8 +33,8 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadURL(JP_TEST_WEBPACK_ENTRY);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // Open the DevTools in Development Environment.
+  if (!app.isPackaged) mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -50,12 +51,13 @@ app.on("ready", () => {
     })
     .catch((error) => console.error(error));
 
+  // Add Content Security Policy header
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
         "Content-Security-Policy": [
-          "img-src blob:",
+          "img-src blob: 'self'",
           "media-src blob:",
           "default-src 'self' 'unsafe-inline' data:",
           "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:",

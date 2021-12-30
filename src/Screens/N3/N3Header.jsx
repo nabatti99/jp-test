@@ -9,25 +9,52 @@ function N3Header(props) {
 
   return (
     <HStack spacing={12} alignItems="start">
-      <Center borderRadius="2xl" backgroundColor="green.50" width={56} height={56}>
+      <Center
+        borderRadius="2xl"
+        backgroundColor="green.50"
+        width={56}
+        height={56}
+        className="animate__animated animate__heartBeat"
+      >
         <Heading size="4xl" fontWeight="bold" textColor="green.500">
           N3
         </Heading>
       </Center>
 
       <VStack paddingY={4} alignItems="start">
-        <Heading size="xl" fontWeight="bold" letterSpacing="tight" textColor="green.700">
+        <Heading
+          size="xl"
+          fontWeight="bold"
+          letterSpacing="tight"
+          textColor="green.700"
+          className="animate__animated animate__fadeInUp"
+        >
           JLPT N3 Test
         </Heading>
-        <Text fontWeight="medium" textColor="gray.500" paddingTop={4}>
+        <Text
+          fontWeight="medium"
+          textColor="gray.500"
+          paddingTop={4}
+          className="animate__animated animate__fadeInUp animate__slow"
+        >
           Pick a tests by unit in JLPT N3 course
         </Text>
         <HStack spacing={4} paddingTop={4}>
-          <Button variant="solid" colorScheme="green" onClick={null}>
+          <Button
+            variant="solid"
+            colorScheme="green"
+            onClick={null}
+            className="animate__animated animate__fadeInUp animate__slow"
+          >
             Want to learn
           </Button>
           {unitTitle && (
-            <Button variant="outline" colorScheme="green" onClick={() => changeTest("N5", null, null)}>
+            <Button
+              variant="outline"
+              colorScheme="green"
+              onClick={() => changeTest("N5", null, null)}
+              className="animate__animated animate__fadeIn"
+            >
               Back to Units
             </Button>
           )}

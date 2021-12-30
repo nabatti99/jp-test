@@ -51,7 +51,12 @@ function N5Header(props) {
             Want to learn
           </Button>
           {unitTitle && (
-            <Button variant="outline" colorScheme="teal" onClick={() => changeTest("N5", null, null)}>
+            <Button
+              variant="outline"
+              colorScheme="teal"
+              onClick={() => changeTest("N5", null, null)}
+              className="animate__animated animate__fadeIn"
+            >
               Back to Units
             </Button>
           )}

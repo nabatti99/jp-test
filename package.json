@@ -20,8 +20,9 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "extraResource": "./data",
-        "name": "JP Test"
+        "extraResource": "./JP Test Data",
+        "name": "JP Test",
+        "icon": "./Icon/JP Test.ico"
       },
       "makers": [
         {
