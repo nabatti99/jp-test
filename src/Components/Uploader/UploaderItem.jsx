@@ -16,7 +16,7 @@ class UploaderItem extends Component {
         .map((item, index) => `Unit ${index + 1}`),
       "Extended Units",
     ],
-    testTypes: ["Reading", "Listening", "Grammar", "All Skills", "Unknown"],
+    testTypes: ["Vocabulary", "Kanji", "Grammar", "Listening", "All Skills", "Unknown"],
 
     name: this.props.name.split(".")[0],
     testType: null,
@@ -165,7 +165,7 @@ class UploaderItem extends Component {
         </HStack>
 
         {this.state.status == "fail" && (
-          <Text as="small" textColor="red.500">
+          <Text as="small" fontWeight="medium" textColor="red.500">
             May be you forgot to add information to the required fields.
           </Text>
         )}

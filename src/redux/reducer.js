@@ -3,6 +3,7 @@ import * as actionTypes from "./actionTypes";
 const initialState = {
   screenName: "Home",
   level: null,
+  section: null,
   unit: null,
   test: null,
   timestamp: new Date(),
@@ -15,6 +16,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         screenName: action.screenName,
         level: null,
+        section: null,
         unit: null,
         test: null,
       };
@@ -23,6 +25,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         level: action.level,
+        section: action.section,
         unit: action.unit,
         test: action.test,
       };

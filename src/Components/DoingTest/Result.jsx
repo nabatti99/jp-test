@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { connect } from "react-redux";
 import {
   Button,
@@ -23,23 +23,26 @@ function Result(props) {
     isOpen: isShowed,
   });
 
-  const { level, unitTitle, testTitle } = props;
+  const { level, section, unit, test } = props;
   const [text, setText] = useState("Saving your result...");
 
   useMemo(() => {
     if (isShowed) {
       window.nativeAPI
-        .readSummary(level, unitTitle, testTitle)
+        .readSummary(level, section, unit, test)
         .then((summary) => {
           summary.history = {
             numTrueAnswers,
             numQuestions,
             time: new Date(),
           };
-          return window.nativeAPI.saveJSON(level, unitTitle, testTitle, "summary", summary);
+          return window.nativeAPI.saveJSON("summary", summary, level, section, unit, test);
         })
         .then(() => setText("Your result has been saved!"))
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+          setText("Fail to save your result 😥");
+        });
     }
   }, [isShowed]);
 
@@ -108,8 +111,9 @@ function Result(props) {
 
 const mapStateToProps = (state) => ({
   level: state.level,
-  unitTitle: state.unit,
-  testTitle: state.test,
+  section: state.section,
+  unit: state.unit,
+  test: state.test,
 });
 
 export default connect(mapStateToProps)(Result);

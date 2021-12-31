@@ -11,17 +11,17 @@ const testType = {
   NO_TIMING: "NO_TIMING",
 };
 
-function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
+function DoingTest({ level, section, unit, test, colorScheme }) {
   const [checklist, setChecklist] = useState(new Array());
   const [timer, setTimer] = useState({
-    isShowed: false,
+    isShown: false,
     timerClock: null,
     value: 0,
     isAllowAddMoreTime: false,
   });
 
   const [result, setResult] = useState({
-    isShowed: false,
+    isShown: false,
     numTrueAnswers: 0,
     numQuestions: 0,
   });
@@ -51,7 +51,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
 
     setTimer({
       ...timer,
-      isShowed: true,
+      isShown: true,
     });
   };
 
@@ -66,7 +66,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
   const handleClosedResult = () => {
     setResult({
       ...result,
-      isShowed: false,
+      isShown: false,
     });
   };
 
@@ -83,7 +83,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
     setTimer({
       timerClock: null,
       value: checklist.length * 60, // 1 question ~ 1 minute
-      isShowed: false,
+      isShown: false,
       isAllowAddMoreTime: false,
     });
 
@@ -97,11 +97,10 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
   };
 
   const stopAndShowResult = () => {
-    console.log(timer);
     setTimer({
       ...timer,
       value: 0,
-      isShowed: false,
+      isShown: false,
     });
 
     setSession({
@@ -111,7 +110,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
     });
 
     setResult({
-      isShowed: true,
+      isShown: true,
       numTrueAnswers: checklist.filter((item) => item.isCorrect).length,
       numQuestions: checklist.length,
     });
@@ -121,7 +120,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
 
   useEffect(() => {
     // Running clock
-    if (timer.isShowed) {
+    if (timer.isShown) {
       if (!timer.timerClock) {
         // Make a new Clock
         const newClock = setInterval(() => {
@@ -151,7 +150,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
 
   useEffect(() => {
     async function getTestData() {
-      const testData = await window.nativeAPI.readTest(level, unitTitle, testTitle);
+      const testData = await window.nativeAPI.readTest(level, section, unit, test);
       console.log(testData);
 
       const newChecklist = new Array();
@@ -289,7 +288,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
       <VStack spacing={4} alignItems="stretch">
         <VStack backgroundColor={`${colorScheme}.50`} borderRadius="lg" paddingY="8" spacing={4}>
           <Heading as="h1" textColor={`${colorScheme}.700`} size="xl">
-            {testTitle}
+            {test}
           </Heading>
           <Heading as="h2" textColor={`${colorScheme}.500`} size="md">
             Time: {timeDisplay} | Questions: {checklist.length}
@@ -303,7 +302,7 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
 
       <N5Clock
         timeDisplay={timeDisplay}
-        isShowed={timer.isShowed}
+        isShown={timer.isShown}
         isEnabledAddMoreTime={timer.isAllowAddMoreTime}
         onEndTimeClick={stopAndShowResult}
         onMoreTimeClick={handleAddMoreTime}
@@ -316,8 +315,9 @@ function DoingTest({ level, unitTitle, testTitle, colorScheme }) {
 
 const mapStateToProps = (state) => ({
   level: state.level,
-  unitTitle: state.unit,
-  testTitle: state.test,
+  section: state.section,
+  unit: state.unit,
+  test: state.test,
 });
 
 export default connect(mapStateToProps)(DoingTest);

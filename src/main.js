@@ -1,12 +1,6 @@
 const { app, BrowserWindow, session, ipcMain } = require("electron");
 const path = require("path");
 
-// Get React Dev Tools path
-const reactDevToolsPath = path.join(
-  process.env.LOCALAPPDATA,
-  "CentBrowser\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\4.22.0_0"
-);
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require
@@ -19,15 +13,9 @@ const createWindow = () => {
     width: 1200,
     height: 1000,
     icon: path.join(__dirname, "Icon/JP Test.ico"),
-    show: false,
     webPreferences: {
       preload: JP_TEST_PRELOAD_WEBPACK_ENTRY,
     },
-  });
-
-  // Show window on ready
-  mainWindow.once("ready-to-show", () => {
-    mainWindow.show();
   });
 
   // and load the index.html of the app.
@@ -37,19 +25,28 @@ const createWindow = () => {
   if (!app.isPackaged) mainWindow.webContents.openDevTools();
 };
 
+// Specify React Dev Tool Extension
+const reactDevToolsPath = path.join(
+  process.env.LOCALAPPDATA,
+  "CentBrowser\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\4.22.0_0"
+);
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 
-// React Dev Tool is start here
 app.on("ready", () => {
+  // Load React Dev Tool if exist
   session.defaultSession
     .loadExtension(reactDevToolsPath)
     .then((response) => {
       console.log("React Dev Tools is enabled");
       createWindow();
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error);
+      createWindow();
+    });
 
   // Add Content Security Policy header
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

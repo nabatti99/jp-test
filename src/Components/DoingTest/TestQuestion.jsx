@@ -25,6 +25,7 @@ class TestQuestion extends Component {
   };
 
   componentDidMount() {
+    // Convert audio and image data to blob: protocol
     if (this.props.audio) {
       const blobAudio = new Blob([this.props.audio], { type: "audio/mpeg" });
       const audioUrl = URL.createObjectURL(blobAudio);

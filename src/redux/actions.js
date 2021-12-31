@@ -7,10 +7,11 @@ export function navigate(screenName) {
   };
 }
 
-export function changeTest(level, unit, test) {
+export function changeTest(level, section, unit, test) {
   return {
     type: actionTypes.CHANGE_TEST,
     level,
+    section,
     unit,
     test,
   };

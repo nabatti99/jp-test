@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Box, Container } from "@chakra-ui/react";
 
 import N3Header from "./N3Header.jsx";
-import Units from "../../Components/Categories/Units.jsx";
+import Units from "../../Components/Units/Units.jsx";
 import Tests from "../../Components/Categories/Tests.jsx";
 import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
 

@@ -5,10 +5,9 @@ const path = require("path");
 
 const { getAppDataPath } = require("./assetsManager");
 
-// Save JSON file at APP_DATA_PATH/Unit/Test/Test.json
-module.exports.saveJSON = async (levelFolder, unitFolder, testFolder, fileName, data) => {
-  const appDataPath = await getAppDataPath();
-  const destinationFolder = path.join(appDataPath, levelFolder, unitFolder, testFolder);
+// Save JSON file at: APP_DATA_PATH/Level/Section/Unit/Test/Test.json
+module.exports.saveJSON = async (fileName, data, ...testPaths) => {
+  const destinationFolder = path.join(...testPaths);
   await prepareDirectory(destinationFolder);
 
   await fsPromises.writeFile(path.join(destinationFolder, `${fileName}.json`), JSON.stringify(data), {
@@ -19,9 +18,9 @@ module.exports.saveJSON = async (levelFolder, unitFolder, testFolder, fileName, 
   return destinationFolder;
 };
 
-// Save Audio file at APP_DATA_PATH/Unit/Test/AudioId/Audio.mp3
-module.exports.saveAudio = async (testFolder, id, url) => {
-  const destinationFolder = path.join(testFolder, id.toString());
+// Save Audio file at APP_DATA_PATH/Level/Section/Unit/Test/AudioId/Audio.mp3
+module.exports.saveAudio = async (id, url, ...testPaths) => {
+  const destinationFolder = path.join(...testPaths, id.toString());
   await prepareDirectory(destinationFolder);
 
   return new Promise((resolve, reject) => {
@@ -48,9 +47,9 @@ module.exports.saveAudio = async (testFolder, id, url) => {
   });
 };
 
-// Save Image file at APP_DATA_PATH/Unit/Test/ImageId/Image.png
-module.exports.saveImage = async (testFolder, id, url) => {
-  const destinationFolder = path.join(testFolder, id.toString());
+// Save Image file at APP_DATA_PATH/Level/Section/Unit/Test/ImageId/Image.png
+module.exports.saveImage = async (id, url, ...testPaths) => {
+  const destinationFolder = path.join(...testPaths, id.toString());
   await prepareDirectory(destinationFolder);
 
   return new Promise((resolve, reject) => {
@@ -78,13 +77,21 @@ module.exports.saveImage = async (testFolder, id, url) => {
   });
 };
 
+module.exports.prepareDir = async (...dirPaths) => {
+  const destinationFolder = path.join(...dirPaths);
+  return prepareDirectory(destinationFolder);
+};
+
 // Prepare directory if it not exists
 const prepareDirectory = async (destinationFolder) => {
+  const appDataPath = await getAppDataPath();
+  const destinationPath = path.join(appDataPath, destinationFolder);
+
   try {
-    return await fsPromises.access(destinationFolder);
+    return await fsPromises.access(destinationPath);
   } catch (error) {
     console.error(error);
-    console.log(`Creating ${destinationFolder}`);
-    return await fsPromises.mkdir(destinationFolder, { recursive: true });
+    console.log(`Creating: ${destinationPath}`);
+    return await fsPromises.mkdir(destinationPath, { recursive: true });
   }
 };

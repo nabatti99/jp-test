@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Box, Container } from "@chakra-ui/react";
 
 import N5Header from "./N5Header.jsx";
-import Units from "../../Components/Categories/Units.jsx";
+import Units from "../../Components/Units/Units.jsx";
 import Tests from "../../Components/Categories/Tests.jsx";
 import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
 
@@ -11,7 +11,7 @@ import { changeTest } from "../../redux/actions.js";
 import Uploader from "../../Components/Uploader/Uploader.jsx";
 
 function N5(props) {
-  const { level, unitTitle, testTitle, changeTest } = props;
+  const { level, section, unit, test, changeTest } = props;
   const [isUploading, setIsUploading] = useState(false);
 
   const handleEndUploaded = () => {
@@ -23,19 +23,26 @@ function N5(props) {
   };
 
   useEffect(() => {
-    if (level != "N5") changeTest("N5", null, null);
+    if (level != "N5") changeTest("N5", null, null, null);
   }, [level]);
 
   let contain = null;
   if (level == "N5")
-    if (testTitle) contain = <DoingTest colorScheme="teal" />;
+    if (section && unit && test)
+      // Render Doing test if have enough Section, Unit and Test
+      contain = <DoingTest colorScheme="teal" />;
     else
       contain = (
         <Fragment>
           <N5Header />
-          {unitTitle && <Tests colorScheme="teal" />}
-          {!(unitTitle || testTitle) && <Units colorScheme="teal" />}
-          <Uploader isOpen={isUploading} onBeginUpload={handleBeginUploaded} onEndUpload={handleEndUploaded} />
+          {section && unit ? (
+            <Tests colorScheme="teal" />
+          ) : (
+            <Fragment>
+              <Units colorScheme="teal" section="Mina no Nihongo 1 - 25" />
+              <Units colorScheme="teal" section="External Sources" />
+            </Fragment>
+          )}
         </Fragment>
       );
 
@@ -50,12 +57,13 @@ function N5(props) {
 
 const mapStateToProps = (state) => ({
   level: state.level,
-  unitTitle: state.unit,
-  testTitle: state.test,
+  section: state.section,
+  unit: state.unit,
+  test: state.test,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
+  changeTest: (level, section, unit, test) => dispatch(changeTest(level, section, unit, test)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(N5);

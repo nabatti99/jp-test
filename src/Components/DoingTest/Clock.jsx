@@ -1,15 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Button,
-  CloseButton,
-  Heading,
-  Slide,
-  VStack,
-} from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, Button, Heading, Slide, VStack } from "@chakra-ui/react";
 
 function Clock(props) {
   const addTimeMessageDictionary = ["Time Added 🪄", "Take your time!", "Good luck 🍀"];
@@ -19,37 +9,37 @@ function Clock(props) {
   };
 
   const [addTimeMessage, setAddTimeMessage] = useState(getAddTimeMessage());
-  const [isShowTimeMessage, setIsShowTimeMessage] = useState(false);
+  const [isShownTimeMessage, setIsShownTimeMessage] = useState(false);
 
   const handleAddMoreTime = () => {
     setAddTimeMessage(getAddTimeMessage());
-    setIsShowTimeMessage(true);
+    setIsShownTimeMessage(true);
 
     props.onMoreTimeClick();
   };
 
   useEffect(() => {
-    if (isShowTimeMessage) {
+    if (isShownTimeMessage) {
       const timeoutId = setTimeout(() => {
-        setIsShowTimeMessage(false);
+        setIsShownTimeMessage(false);
       }, 5000);
 
       return () => clearTimeout(timeoutId);
     }
-  }, [isShowTimeMessage]);
+  }, [isShownTimeMessage]);
 
   const addTimeMessageRender = useMemo(() => {
-    if (isShowTimeMessage)
+    if (isShownTimeMessage)
       return (
         <Alert status="success" marginTop={4}>
           <AlertIcon />
           <AlertTitle marginRight={2}>{addTimeMessage}</AlertTitle>
         </Alert>
       );
-  }, [addTimeMessage, isShowTimeMessage]);
+  }, [addTimeMessage, isShownTimeMessage]);
 
   return (
-    <Slide direction="right" in={props.isShowed} style={{ top: 4, right: 2, width: "12rem", height: "12rem" }}>
+    <Slide direction="right" in={props.isShown} style={{ top: 4, right: 2, width: "12rem", height: "12rem" }}>
       <VStack
         alignItems="stretch"
         backgroundColor="white"

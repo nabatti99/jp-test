@@ -16,10 +16,11 @@ module.exports.readDir = async (...dirPaths) => {
   return files;
 };
 
-module.exports.readTest = async (levelFolder, unitFolder, testFolder) => {
+module.exports.readTest = async (...testPaths) => {
   const appDataPath = await getAppDataPath();
-  const destinationFolder = path.join(appDataPath, levelFolder, unitFolder, testFolder);
+  const destinationFolder = path.join(appDataPath, ...testPaths);
 
+  const testFolder = testPaths[testPaths.length - 1];
   const rawData = await fsPromises.readFile(path.join(destinationFolder, `${testFolder}.json`), {
     encoding: "utf-8",
   });
@@ -42,9 +43,9 @@ module.exports.readTest = async (levelFolder, unitFolder, testFolder) => {
   return data;
 };
 
-module.exports.readSummary = async (levelFolder, unitFolder, testFolder) => {
+module.exports.readSummary = async (...testPaths) => {
   const appDataPath = await getAppDataPath();
-  const destinationFolder = path.join(appDataPath, levelFolder, unitFolder, testFolder);
+  const destinationFolder = path.join(appDataPath, ...testPaths);
 
   const rawData = await fsPromises.readFile(path.join(destinationFolder, `summary.json`), {
     encoding: "utf-8",

@@ -1,19 +1,19 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 const { readJSON, readDir, readTest, readSummary } = require("./utilities/native/readData");
-const { saveJSON, saveAudio, saveImage } = require("./utilities/native/saveData");
+const { saveJSON, saveAudio, saveImage, prepareDir } = require("./utilities/native/saveData");
 
 contextBridge.exposeInMainWorld("nativeAPI", {
   readJSON: async (filePath) => readJSON(filePath),
-  saveJSON: async (levelFolder, unitFolder, testFolder, fileName, data) =>
-    saveJSON(levelFolder, unitFolder, testFolder, fileName, data),
+  saveJSON: async (fileName, data, ...testPaths) => saveJSON(fileName, data, ...testPaths),
 
-  saveAudio: async (testFolder, id, url) => saveAudio(testFolder, id, url),
-  saveImage: async (testFolder, id, url) => saveImage(testFolder, id, url),
+  saveAudio: async (id, url, ...testPaths) => saveAudio(id, url, ...testPaths),
+  saveImage: async (id, url, ...testPaths) => saveImage(id, url, ...testPaths),
 
+  prepareDir: async (...dirPaths) => prepareDir(...dirPaths),
   readDir: async (...dirPaths) => readDir(...dirPaths),
-  readTest: async (levelFolder, unitFolder, testFolder) => readTest(levelFolder, unitFolder, testFolder),
-  readSummary: async (levelFolder, unitFolder, testFolder) => readSummary(levelFolder, unitFolder, testFolder),
+  readTest: async (...testPaths) => readTest(...testPaths),
+  readSummary: async (...testPaths) => readSummary(...testPaths),
 });
 
 console.log("Loaded Preload file");

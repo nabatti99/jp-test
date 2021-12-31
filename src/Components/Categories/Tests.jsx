@@ -6,13 +6,13 @@ import { changeTest } from "../../redux/actions";
 
 import "animate.css";
 
-function Tests({ level, unitTitle, changeTest, colorScheme, timestamp }) {
+function Tests({ level, section, unit, changeTest, colorScheme, timestamp }) {
   const [tests, setTests] = useState(new Array());
 
   useEffect(() => {
     async function getTests() {
-      const testFolders = await window.nativeAPI.readDir(level, unitTitle);
-      console.log(testFolders);
+      const testFolders = await window.nativeAPI.readDir(level, section, unit);
+
       const testWorks = testFolders.map(async (testFolder) => {
         let result = {
           title: testFolder,
@@ -21,11 +21,11 @@ function Tests({ level, unitTitle, changeTest, colorScheme, timestamp }) {
         };
 
         try {
-          const summary = await window.nativeAPI.readSummary(level, unitTitle, testFolder);
+          const summary = await window.nativeAPI.readSummary(level, section, unit, testFolder);
           result = summary;
         } catch (error) {
           console.error(error);
-          window.nativeAPI.saveJSON(level, unitTitle, testFolder, "summary", result);
+          window.nativeAPI.saveJSON("summary", result, level, section, unit, testFolder);
         }
 
         return result;
@@ -54,7 +54,7 @@ function Tests({ level, unitTitle, changeTest, colorScheme, timestamp }) {
             transitionDuration="0.24s"
             className="animate__animated animate__fadeIn"
             cursor="pointer"
-            onClick={() => changeTest(level, unitTitle, test.title)}
+            onClick={() => changeTest(level, section, unit, test.title)}
           >
             <HStack alignItems="start" spacing={4}>
               <VStack alignItems="stretch">
@@ -122,12 +122,14 @@ function Tests({ level, unitTitle, changeTest, colorScheme, timestamp }) {
 
 const mapStateToProps = (state) => ({
   level: state.level,
-  unitTitle: state.unit,
+  section: state.section,
+  unit: state.unit,
+  section: state.section,
   timestamp: state.timestamp,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
+  changeTest: (level, section, unit, test) => dispatch(changeTest(level, section, unit, test)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tests);
