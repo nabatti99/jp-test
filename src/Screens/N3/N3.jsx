@@ -30,7 +30,8 @@ function N3(props) {
           ) : (
             <Fragment>
               <Units colorScheme="pink" section="Junbi" />
-              <Units colorScheme="pink" section="Tkaitasu" />
+              <Units colorScheme="pink" section="Taisaku" />
+              <Units colorScheme="pink" section="Practice" />
               <Units colorScheme="pink" section="External Sources" />
             </Fragment>
           )}

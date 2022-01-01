@@ -9,11 +9,41 @@ module.exports.readJSON = async (filePath) => {
   return JSON.parse(data);
 };
 
+const scanJSON = async (dirPath) => {
+  const result = new Array();
+
+  const stat = await fsPromises.lstat(dirPath);
+  if (!stat.isDirectory()) return result;
+
+  const subDirs = await fsPromises.readdir(dirPath);
+  for (const subDir of subDirs) {
+    const subDirPath = path.join(dirPath, subDir);
+    const stat = await fsPromises.lstat(subDirPath);
+
+    if (stat.isDirectory()) {
+      const JSONFiles = await scanJSON(subDirPath);
+      result.push(...JSONFiles);
+    } else {
+      const fileName = subDir;
+      const fileExtension = fileName.split(".").reverse()[0];
+      if (fileExtension.toLowerCase() == "json")
+        result.push({
+          fileName,
+          filePath: subDirPath,
+        });
+    }
+  }
+
+  return result;
+};
+
+module.exports.scanJSON = scanJSON;
+
 module.exports.readDir = async (...dirPaths) => {
   const appDataPath = await getAppDataPath();
-  const files = await fsPromises.readdir(path.join(appDataPath, ...dirPaths));
+  const dirs = await fsPromises.readdir(path.join(appDataPath, ...dirPaths));
 
-  return files;
+  return dirs;
 };
 
 module.exports.readTest = async (...testPaths) => {

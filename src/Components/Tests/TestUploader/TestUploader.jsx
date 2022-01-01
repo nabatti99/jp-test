@@ -55,6 +55,23 @@ class Uploader extends Component {
             name: file.name,
             filePath: file.path,
           });
+
+        continue;
+      }
+
+      if (file.type == "") {
+        const JSONFiles = await window.nativeAPI.scanJSON(file.path);
+        // Find all JSON File that not exist in the newTests
+        const newJSONFiles = JSONFiles.filter(
+          (newJSONFile) => newTests.findIndex((test) => test.filePath == newJSONFile.filePath) == -1
+        );
+        const newTestWorkers = newJSONFiles.map((newJSONFile) => ({
+          name: newJSONFile.fileName,
+          filePath: newJSONFile.filePath,
+        }));
+        console.log(newTestWorkers);
+
+        newTests.push(...(await Promise.all(newTestWorkers)));
       }
     }
 

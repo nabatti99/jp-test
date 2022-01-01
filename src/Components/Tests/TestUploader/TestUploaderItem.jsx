@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import { Box, Button, FormControl, Heading, HStack, Input, Select, Text } from "@chakra-ui/react";
 
 import { uploadNewTest } from "../../../redux/actions";
+import { CheckIcon } from "@chakra-ui/icons";
 
 const ADD_METADATA = "ADD_METADATA";
 const DONE = "DONE";
 const FAIL = "FAIL";
 
-const testTypes = ["Vocabulary", "Kanji", "Grammar", "Kaiwa", "Shukudai", "Unknown"];
+const testTypes = ["Từ vựng", "Kanji", "Ngữ pháp", "Kaiwa", "Luyện tập", "Hong bik"];
 
 /**
  * @param {String} name
@@ -135,12 +136,12 @@ class TestUploaderItem extends Component {
               placeholder="Test name"
               value={testName}
               onChange={this.handleNameChanged}
-              disabled={status == DONE}
+              isDisabled={status == DONE}
             />
           </FormControl>
 
           <FormControl isRequired>
-            <Select placeholder="Test type" onChange={this.handleTestTypeChanged} disabled={status == DONE}>
+            <Select placeholder="Test type" onChange={this.handleTestTypeChanged} isDisabled={status == DONE}>
               {testTypes.map((testType) => (
                 <option key={testType}>{testType}</option>
               ))}
@@ -152,8 +153,9 @@ class TestUploaderItem extends Component {
               colorScheme={status == FAIL ? "red" : colorScheme}
               onClick={this.handleSavedItem}
               isLoading={isSaving}
+              leftIcon={status == DONE && <CheckIcon />}
               loadingText="Saving..."
-              disabled={status == DONE || isSaving}
+              isDisabled={status == DONE || isSaving}
             >
               {status == ADD_METADATA && "Save"}
               {status == DONE && "Done"}

@@ -1,10 +1,11 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const { readJSON, readDir, readTest, readSummary } = require("./utilities/native/readData");
+const { readJSON, readDir, readTest, readSummary, scanJSON } = require("./utilities/native/readData");
 const { saveJSON, saveAudio, saveImage, prepareDir } = require("./utilities/native/saveData");
 
 contextBridge.exposeInMainWorld("nativeAPI", {
   readJSON: async (filePath) => readJSON(filePath),
+  scanJSON: async (dirPath) => scanJSON(dirPath),
   saveJSON: async (fileName, data, ...testPaths) => saveJSON(fileName, data, ...testPaths),
 
   saveAudio: async (id, url, ...testPaths) => saveAudio(id, url, ...testPaths),
