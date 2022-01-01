@@ -6,10 +6,8 @@ import TestQuestion from "./TestQuestion.jsx";
 import Result from "./Result.jsx";
 import N5Clock from "./Clock.jsx";
 
-const testType = {
-  NORMAL: "NORMAL",
-  NO_TIMING: "NO_TIMING",
-};
+const NORMAL = "NORMAL";
+const NO_TIMING = "NO_TIMING";
 
 function DoingTest({ level, section, unit, test, colorScheme }) {
   const [checklist, setChecklist] = useState(new Array());
@@ -37,7 +35,7 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
     checklist[questionIndex] = {
       guessAnswer,
       isCorrect,
-      isShowedAnswer: session.doingTestType == testType.NO_TIMING,
+      isShowedAnswer: session.doingTestType == NO_TIMING,
     };
     setChecklist(Array.from(checklist));
   };
@@ -46,7 +44,7 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
     setSession({
       isTiming: true,
       isDone: false,
-      doingTestType: testType.NORMAL,
+      doingTestType: NORMAL,
     });
 
     setTimer({
@@ -59,7 +57,7 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
     setSession({
       isTiming: false,
       isDone: true,
-      doingTestType: testType.NO_TIMING,
+      doingTestType: NO_TIMING,
     });
   };
 
@@ -174,11 +172,13 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
             guessAnswer: "",
           }); // init with a failure answer
 
-          const answers = item.answer.map((answer) => ({
-            ID: answer.ID,
-            content: answer.Name,
-            isCorrect: answer.Type == 1,
-          }));
+          const answers = item.answer
+            .sort(() => Math.random() - 0.5)
+            .map((answer) => ({
+              ID: answer.ID,
+              content: answer.Name,
+              isCorrect: answer.Type == 1,
+            }));
 
           return {
             ID: item.ID,
@@ -234,7 +234,7 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
           answers={item.answers}
           audio={item.audio}
           image={item.image}
-          isDoing={session.isTiming}
+          isDoing={session.isTiming || session.doingTestType == NO_TIMING}
           info={checklist[item.questionIndex]}
           onChangeAnswer={(guessAnswer, isCorrect) =>
             handleGuessChangedAnswer(guessAnswer, isCorrect, item.questionIndex)

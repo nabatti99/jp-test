@@ -21,7 +21,7 @@ class UnitTest extends Component {
     {
       name: "N3",
       subtitle: "JLPT N3",
-      colorTheme: "green",
+      colorTheme: "pink",
       isAvailable: true,
     },
     {

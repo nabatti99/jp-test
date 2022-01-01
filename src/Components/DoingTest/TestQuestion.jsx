@@ -1,4 +1,4 @@
-import React, { Component, memo } from "react";
+import React, { Component } from "react";
 import { Box, Heading, Image, Radio, RadioGroup, SimpleGrid, Text } from "@chakra-ui/react";
 
 import "animate.css";
@@ -8,6 +8,7 @@ import "animate.css";
  * @param {Array} answers
  * @param {String} audio
  * @param {String} image
+ * @param {Boolean} isDoing
  * @param {Object} info checklist item
  * @param {Event} onChangeAnswer (isCorrect) => {...}
  */
@@ -41,8 +42,17 @@ class TestQuestion extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.isDoing != this.props.isDoing) return true;
+    if (nextProps.info != this.props.info) return true;
+    if (nextState.audioUrl != this.state.audioUrl) return true;
+    if (nextState.imageUrl != this.state.imageUrl) return true;
+
+    return false;
+  }
+
   render() {
-    const { question, answers, colorScheme } = this.props;
+    const { question, answers, colorScheme, isDoing } = this.props;
     const { guessAnswer, isCorrect, isShowedAnswer } = this.props.info;
 
     return (
@@ -50,7 +60,7 @@ class TestQuestion extends Component {
         <Heading size="md" dangerouslySetInnerHTML={{ __html: question }} marginBottom={2}></Heading>
 
         <Box marginBottom={2}>
-          {this.state.audioUrl && <audio src={this.state.audioUrl} controls />}
+          {this.state.audioUrl && <Box as="audio" src={this.state.audioUrl} controls width="100%" />}
           {this.state.imageUrl && <Image src={this.state.imageUrl} fit="fill" />}
         </Box>
 
@@ -88,7 +98,7 @@ class TestQuestion extends Component {
                   <Radio
                     value={answer.content}
                     colorScheme={isShowedAnswer ? (isCorrect ? "green" : "red") : `${colorScheme}`}
-                    isReadOnly={isShowedAnswer}
+                    isReadOnly={isShowedAnswer || !isDoing}
                     borderColor={borderColor}
                     width="100%"
                   >
@@ -104,4 +114,4 @@ class TestQuestion extends Component {
   }
 }
 
-export default memo(TestQuestion);
+export default TestQuestion;

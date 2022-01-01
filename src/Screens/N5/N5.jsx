@@ -4,23 +4,13 @@ import { Box, Container } from "@chakra-ui/react";
 
 import N5Header from "./N5Header.jsx";
 import Units from "../../Components/Units/Units.jsx";
-import Tests from "../../Components/Categories/Tests.jsx";
+import Tests from "../../Components/Tests/Tests.jsx";
 import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
 
 import { changeTest } from "../../redux/actions.js";
-import Uploader from "../../Components/Uploader/Uploader.jsx";
 
 function N5(props) {
   const { level, section, unit, test, changeTest } = props;
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleEndUploaded = () => {
-    setIsUploading(false);
-  };
-
-  const handleBeginUploaded = () => {
-    setIsUploading(true);
-  };
 
   useEffect(() => {
     if (level != "N5") changeTest("N5", null, null, null);
@@ -47,9 +37,10 @@ function N5(props) {
       );
 
   return (
-    <Box onDragOver={handleBeginUploaded}>
+    <Box>
       <Container maxWidth="container.lg" marginTop={8}>
         {contain}
+        <Box height={16}></Box>
       </Container>
     </Box>
   );

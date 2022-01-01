@@ -4,45 +4,43 @@ import { Box, Container } from "@chakra-ui/react";
 
 import N4Header from "./N4Header.jsx";
 import Units from "../../Components/Units/Units.jsx";
-import Tests from "../../Components/Categories/Tests.jsx";
+import Tests from "../../Components/Tests/Tests.jsx";
 import DoingTest from "../../Components/DoingTest/DoingTest.jsx";
 
 import { changeTest } from "../../redux/actions.js";
-import Uploader from "../../Components/Uploader/Uploader.jsx";
 
 function N4(props) {
-  const { level, unitTitle, testTitle, changeTest } = props;
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleEndUploaded = () => {
-    setIsUploading(false);
-  };
-
-  const handleBeginUploaded = () => {
-    setIsUploading(true);
-  };
+  const { level, section, unit, test, changeTest } = props;
 
   useEffect(() => {
-    if (level != "N4") changeTest("N4", null, null);
+    if (level != "N4") changeTest("N4", null, null, null);
   }, [level]);
 
   let contain = null;
   if (level == "N4")
-    if (testTitle) contain = <DoingTest colorScheme="blue" />;
+    if (section && unit && test)
+      // Render Doing test if have enough Section, Unit and Test
+      contain = <DoingTest colorScheme="blue" />;
     else
       contain = (
         <Fragment>
           <N4Header />
-          {unitTitle && <Tests colorScheme="blue" />}
-          {!(unitTitle || testTitle) && <Units colorScheme="blue" />}
-          <Uploader isOpen={isUploading} onBeginUpload={handleBeginUploaded} onEndUpload={handleEndUploaded} />
+          {section && unit ? (
+            <Tests colorScheme="blue" />
+          ) : (
+            <Fragment>
+              <Units colorScheme="blue" section="Mina no Nihongo 25 - 50" />
+              <Units colorScheme="blue" section="External Sources" />
+            </Fragment>
+          )}
         </Fragment>
       );
 
   return (
-    <Box onDragOver={handleBeginUploaded}>
+    <Box>
       <Container maxWidth="container.lg" marginTop={8}>
         {contain}
+        <Box height={16}></Box>
       </Container>
     </Box>
   );
@@ -50,12 +48,13 @@ function N4(props) {
 
 const mapStateToProps = (state) => ({
   level: state.level,
-  unitTitle: state.unit,
-  testTitle: state.test,
+  section: state.section,
+  unit: state.unit,
+  test: state.test,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  changeTest: (level, unit, test) => dispatch(changeTest(level, unit, test)),
+  changeTest: (level, section, unit, test) => dispatch(changeTest(level, section, unit, test)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(N4);

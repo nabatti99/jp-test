@@ -17,17 +17,17 @@ import {
 } from "@chakra-ui/react";
 
 function Result(props) {
-  const { isShowed, numTrueAnswers, numQuestions } = props.info;
+  const { isShown, numTrueAnswers, numQuestions } = props.info;
 
   const { isOpen, onOpen, onClose } = useDisclosure({
-    isOpen: isShowed,
+    isOpen: isShown,
   });
 
   const { level, section, unit, test } = props;
   const [text, setText] = useState("Saving your result...");
 
   useMemo(() => {
-    if (isShowed) {
+    if (isShown) {
       window.nativeAPI
         .readSummary(level, section, unit, test)
         .then((summary) => {
@@ -44,7 +44,7 @@ function Result(props) {
           setText("Fail to save your result 😥");
         });
     }
-  }, [isShowed]);
+  }, [isShown]);
 
   const handleClosedModal = () => {
     onClose();

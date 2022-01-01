@@ -11,12 +11,12 @@ function N3Header(props) {
     <HStack spacing={12} alignItems="start">
       <Center
         borderRadius="2xl"
-        backgroundColor="green.50"
+        backgroundColor="pink.50"
         width={56}
         height={56}
         className="animate__animated animate__heartBeat"
       >
-        <Heading size="4xl" fontWeight="bold" textColor="green.500">
+        <Heading size="4xl" fontWeight="bold" textColor="pink.500">
           N3
         </Heading>
       </Center>
@@ -26,7 +26,7 @@ function N3Header(props) {
           size="xl"
           fontWeight="bold"
           letterSpacing="tight"
-          textColor="green.700"
+          textColor="pink.700"
           className="animate__animated animate__fadeInUp"
         >
           JLPT N3 Test
@@ -42,7 +42,7 @@ function N3Header(props) {
         <HStack spacing={4} paddingTop={4}>
           <Button
             variant="solid"
-            colorScheme="green"
+            colorScheme="pink"
             onClick={null}
             className="animate__animated animate__fadeInUp animate__slow"
           >
@@ -51,7 +51,7 @@ function N3Header(props) {
           {unitTitle && (
             <Button
               variant="outline"
-              colorScheme="green"
+              colorScheme="pink"
               onClick={() => changeTest("N5", null, null)}
               className="animate__animated animate__fadeIn"
             >

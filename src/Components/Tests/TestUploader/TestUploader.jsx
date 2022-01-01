@@ -13,7 +13,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import UploaderItem from "./UploaderItem.jsx";
+import TestUploaderItem from "./TestUploaderItem.jsx";
+
+const IMPORT_FILES = "IMPORT_FILES";
+const ADD_INFO = "ADD_INFO";
 
 /**
  * @param {Boolean} isOpen
@@ -21,11 +24,8 @@ import UploaderItem from "./UploaderItem.jsx";
  * @param {Event} onEndUpload
  */
 class Uploader extends Component {
-  IMPORT_FILES = "IMPORT_FILES";
-  ADD_INFO = "ADD_INFO";
-
   state = {
-    step: this.IMPORT_FILES,
+    step: IMPORT_FILES,
     newTests: new Array(),
     // newTests: [
     //   {
@@ -38,7 +38,7 @@ class Uploader extends Component {
   handleDraggedData = (event) => {
     event.preventDefault();
 
-    this.setState({ step: this.IMPORT_FILES });
+    this.setState({ step: IMPORT_FILES });
   };
 
   handleDroppedData = async (event) => {
@@ -58,36 +58,44 @@ class Uploader extends Component {
       }
     }
 
-    this.setState({ newTests, step: this.ADD_INFO });
-    this.props.onBeginUpload();
+    this.setState({ newTests, step: ADD_INFO });
   };
 
   handleDrawerClosed = () => {
-    this.setState({ newTests: new Array(), step: this.IMPORT_FILES });
-    this.props.onEndUpload();
+    this.setState({ newTests: new Array(), step: IMPORT_FILES });
+    this.props.onClose();
   };
 
   render() {
+    const { step, newTests } = this.state;
+    const { colorScheme, isOpen, onSuccess } = this.props;
+
     return (
-      <Drawer placement="bottom" isOpen={this.props.isOpen} onClose={this.handleDrawerClosed}>
+      <Drawer placement="bottom" isOpen={isOpen} onClose={this.handleDrawerClosed}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
 
           <DrawerHeader>Uploading your Tests</DrawerHeader>
           <DrawerBody onDragOver={this.handleDraggedData} onDrop={this.handleDroppedData}>
-            {this.state.step == this.IMPORT_FILES && (
+            {step == IMPORT_FILES && (
               <Box width="100%" paddingTop={8}>
                 <Center>
-                  <Heading>Drop your JSON file here</Heading>
+                  <Heading textColor={`${colorScheme}.500`}>Drop your JSON file here 🪄</Heading>
                 </Center>
               </Box>
             )}
 
-            {this.state.step == this.ADD_INFO && (
+            {step == ADD_INFO && (
               <VStack spacing={8} alignItems="stretch">
-                {this.state.newTests.map((metadata) => (
-                  <UploaderItem name={metadata.name} filePath={metadata.filePath} key={metadata.filePath} />
+                {newTests.map((test) => (
+                  <TestUploaderItem
+                    name={test.name}
+                    filePath={test.filePath}
+                    key={test.filePath}
+                    colorScheme={colorScheme}
+                    onSuccess={onSuccess}
+                  />
                 ))}
               </VStack>
             )}

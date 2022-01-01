@@ -75,20 +75,6 @@ class Units extends Component {
 
         <Divider marginTop={4} />
 
-        {units2Render.length == 0 && (
-          <Center paddingY={16} className="animate__animated animate__fadeIn">
-            <VStack>
-              <CircleXMarkIcon boxSize={16} color="red.400" />
-              <Heading textColor="red.500" paddingTop={4}>
-                Oh no! Nothing here.
-              </Heading>
-              <Text fontWeight="medium" textColor="gray.500">
-                Drag and drop your JSON file test to upload 😇
-              </Text>
-            </VStack>
-          </Center>
-        )}
-
         <SimpleGrid columns={4} gap={4} paddingTop={8}>
           {units2Render.map((unit, index) => (
             <Box
@@ -209,7 +195,6 @@ class Units extends Component {
 
 const mapStateToProps = (state) => ({
   level: state.level,
-  timestamp: state.timestamp,
 });
 
 const mapDispatchToProps = (dispatch) => ({
