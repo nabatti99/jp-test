@@ -35,7 +35,7 @@ class Navbar extends Component {
   render() {
     return (
       <Container maxWidth="container.lg">
-        <HStack spacing={4} justify="center" marginTop={4}>
+        <HStack spacing={4} justify="center" paddingTop={4}>
           {this.screens.map((screen) => (
             <Button
               key={screen.name}

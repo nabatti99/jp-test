@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Box, Button, FormControl, Heading, HStack, Input, Select, Text } from "@chakra-ui/react";
 
-import { uploadNewTest } from "../../../redux/actions";
 import { CheckIcon } from "@chakra-ui/icons";
 
 const ADD_METADATA = "ADD_METADATA";

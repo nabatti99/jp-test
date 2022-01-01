@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
+  Center,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -10,14 +11,16 @@ import {
   DrawerHeader,
   DrawerOverlay,
   FormControl,
-  FormLabel,
   HStack,
+  Image,
   Input,
   Text,
-  useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
+
+import "animate.css";
+
+import CreateSvg from "../../global/svgs/Create.svg";
 
 const NORMAL = "NORMAL";
 const CREATING = "CREATING";
@@ -93,7 +96,11 @@ function UnitCreator({ colorScheme, onClose, onSuccess, isOpen, level, section }
           )}
         </DrawerBody>
 
-        <DrawerFooter></DrawerFooter>
+        <DrawerFooter justifyContent="center">
+          <Center className="animate__animated animate__fadeIn">
+            <Image src={CreateSvg} width={96} />
+          </Center>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

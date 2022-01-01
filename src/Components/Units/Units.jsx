@@ -5,7 +5,6 @@ import { Box, Button, Center, Divider, Heading, HStack, SimpleGrid, Text, VStack
 import BooksIcon from "../Icons/BooksIcon.jsx";
 import CupIcon from "../Icons/CupIcon.jsx";
 import LampDeskIcon from "../Icons/LampDeskIcon.jsx";
-import CircleXMarkIcon from "../Icons/CircleXMarkIcon.jsx";
 import UnitCreator from "./UnitCreator.jsx";
 
 import { changeTest } from "../../redux/actions";
@@ -91,7 +90,7 @@ class Units extends Component {
               overflow="hidden"
               onClick={() => changeTest(level, section, unit, null)}
             >
-              <VStack alignItems="stretch" spacing={0}>
+              <VStack alignItems="stretch" spacing={0} height="100%">
                 <Center paddingY={8} position="relative" overflow="hidden">
                   <Center>
                     <Heading as="h3" size="2xl" textColor={`${colorScheme}.600`} letterSpacing="tight">
@@ -126,16 +125,12 @@ class Units extends Component {
                     color={`${colorScheme}.500`}
                   />
                 </Center>
-                <Text
-                  fontWeight="bold"
-                  textColor="white"
-                  textAlign="center"
-                  backgroundColor={`${colorScheme}.500`}
-                  paddingTop={2}
-                  paddingBottom={2}
-                >
-                  {unit}
-                </Text>
+
+                <Center flexGrow={1} backgroundColor={`${colorScheme}.500`} paddingY={2} paddingX={2}>
+                  <Text fontWeight="bold" textColor="white" textAlign="center">
+                    {unit}
+                  </Text>
+                </Center>
               </VStack>
             </Box>
           ))}

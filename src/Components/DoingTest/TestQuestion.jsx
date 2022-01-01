@@ -56,12 +56,14 @@ class TestQuestion extends Component {
     const { guessAnswer, isCorrect, isShowedAnswer } = this.props.info;
 
     return (
-      <Box paddingBottom={4} className="animate__animated animate__fadeIn animate__slow">
-        <Heading size="md" dangerouslySetInnerHTML={{ __html: question }} marginBottom={2}></Heading>
+      <Box paddingBottom={8} className="animate__animated animate__fadeIn animate__slow">
+        <Heading size="md" dangerouslySetInnerHTML={{ __html: question }} marginBottom={4}></Heading>
 
-        <Box marginBottom={2}>
-          {this.state.audioUrl && <Box as="audio" src={this.state.audioUrl} controls width="100%" />}
-          {this.state.imageUrl && <Image src={this.state.imageUrl} fit="fill" />}
+        <Box>
+          {this.state.audioUrl && (
+            <Box as="audio" src={this.state.audioUrl} controls width="100%" marginBottom={2} />
+          )}
+          {this.state.imageUrl && <Image src={this.state.imageUrl} fit="fill" marginBottom={2} />}
         </Box>
 
         <RadioGroup onChange={this.handleChangedAnswer} value={guessAnswer}>

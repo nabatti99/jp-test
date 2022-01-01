@@ -30,7 +30,7 @@ class Layout extends Component {
     }
 
     return (
-      <Box width="100%">
+      <Box width="100%" minHeight="100vh">
         <Navbar />
 
         {screen}

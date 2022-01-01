@@ -52,7 +52,7 @@ class Uploader extends Component {
         if (newTests.findIndex((test) => test.filePath == file.path) == -1)
           // If the New Test is not exist in the newTests
           newTests.push({
-            name: file.name,
+            name: this.formatTestName(file.name),
             filePath: file.path,
           });
 
@@ -66,12 +66,11 @@ class Uploader extends Component {
           (newJSONFile) => newTests.findIndex((test) => test.filePath == newJSONFile.filePath) == -1
         );
         const newTestWorkers = newJSONFiles.map((newJSONFile) => ({
-          name: newJSONFile.fileName,
+          name: this.formatTestName(newJSONFile.fileName),
           filePath: newJSONFile.filePath,
         }));
-        console.log(newTestWorkers);
 
-        newTests.push(...(await Promise.all(newTestWorkers)));
+        newTests.push(...newTestWorkers);
       }
     }
 
@@ -81,6 +80,15 @@ class Uploader extends Component {
   handleDrawerClosed = () => {
     this.setState({ newTests: new Array(), step: IMPORT_FILES });
     this.props.onClose();
+  };
+
+  formatTestName = (name) => {
+    return name
+      .toLowerCase()
+      .trim()
+      .split(/\s+/g)
+      .map((word) => word[0].toUpperCase().concat(word.slice(1)))
+      .join(" ");
   };
 
   render() {

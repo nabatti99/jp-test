@@ -53,25 +53,31 @@ module.exports.saveImage = async (id, url, ...testPaths) => {
   const destinationPath = await prepareDirectory(destinationFolder);
 
   return new Promise((resolve, reject) => {
-    const filePath = path.join(destinationPath, `${id}.png`);
-    const writeStream = fs.createWriteStream(filePath);
-
     https
       .get(url, (response) => {
         console.log(response);
-        if (response.statusCode == 200 && response.headers["content-type"] == "image/png") {
+        if (response.statusCode == 200) {
+          let filePath = null;
+
+          if (response.headers["content-type"] == "image/png") filePath = path.join(destinationPath, `${id}.png`);
+
+          if (response.headers["content-type"] == "image/jpeg") filePath = path.join(destinationPath, `${id}.jpg`);
+
+          if (filePath == null) throw new Error(`Can't found 'Content-Type' of the image at: ${url}`);
+
+          const writeStream = fs.createWriteStream(filePath);
           response.pipe(writeStream);
-          writeStream.on("finish", () => writeStream.close());
+
+          writeStream.on("finish", () => {
+            console.log(`Saved Image at: ${filePath}`);
+            writeStream.close();
+          });
         }
       })
       .on("close", () => {
-        console.log(`Saved Image at: ${filePath}`);
         resolve("done");
       })
       .on("error", (error) => {
-        writeStream.close();
-        fs.unlink(filePath);
-
         reject(error);
       });
   });

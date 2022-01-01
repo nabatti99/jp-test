@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Box, Button, Center, Heading, HStack, Text, Container, AbsoluteCenter, Image } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, Text, Container, Image } from "@chakra-ui/react";
 import { ArrowForwardIcon, DownloadIcon } from "@chakra-ui/icons";
 
 import SquarePIcon from "../../Components/Icons/SquarePIcon.jsx";
@@ -9,7 +9,9 @@ import "animate.css";
 import GraduationSVG from "../../global/svgs/Graduation.svg";
 
 class HomeHeader extends Component {
-  handleStartedButtonClicked = () => {};
+  handleStartedButtonClicked = () => {
+    window.scrollTo({ top: document.body.clientHeight - window.innerHeight, behavior: "smooth" });
+  };
 
   render() {
     return (
@@ -63,7 +65,7 @@ class HomeHeader extends Component {
               rightIcon={<DownloadIcon />}
               className="animate__animated animate__fadeInUp animate__slow"
             >
-              Download
+              More tests
             </Button>
           </HStack>
         </Container>

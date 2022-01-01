@@ -7,7 +7,11 @@ function HomeFooter(props) {
       <VStack>
         <Heading textColor="gray.300">JP Test</Heading>
         <Text fontWeight="medium" textColor="gray.300">
-          Made by Minh at <Link href="#">Hugo English Club</Link>
+          Made by{" "}
+          <Link href="https://www.facebook.com/HUGOClub" target="_blank">
+            Hugo English Club
+          </Link>{" "}
+          team with love.
         </Text>
       </VStack>
     </Center>

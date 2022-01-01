@@ -73,7 +73,7 @@ function Tests({ level, section, unit, changeTest, colorScheme, timestamp }) {
       </VStack>
 
       {tests.length == 0 && (
-        <VStack marginTop={8} className="animate__animated animate__fadeIn">
+        <VStack marginTop={16} className="animate__animated animate__fadeIn">
           <CircleXMarkIcon boxSize={16} color="red.400" />
           <Heading textColor="red.500" paddingTop={4}>
             Oh no! Nothing here.

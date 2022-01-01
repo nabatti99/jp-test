@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Box, Container } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import QuickTest from "./QuickTest.jsx";
 import UnitTest from "./UnitTest.jsx";

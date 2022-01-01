@@ -1,4 +1,4 @@
-const { app, BrowserWindow, session, ipcMain } = require("electron");
+const { app, BrowserWindow, session, ipcMain, shell } = require("electron");
 const path = require("path");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -16,6 +16,12 @@ const createWindow = () => {
     webPreferences: {
       preload: JP_TEST_PRELOAD_WEBPACK_ENTRY,
     },
+  });
+
+  // Open external URL in Browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: "deny" };
   });
 
   // and load the index.html of the app.

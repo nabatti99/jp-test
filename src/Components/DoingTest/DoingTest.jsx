@@ -220,8 +220,8 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
           key={item.ID}
           size="lg"
           dangerouslySetInnerHTML={{ __html: item.content }}
-          paddingTop={item.isAdditionHeader == 2 ? 8 : 0}
-          paddingBottom={4}
+          paddingTop={item.isAdditionHeader == 2 ? 16 : 0}
+          paddingBottom={8}
           className="animate__animated animate__fadeIn"
         ></Heading>
       );
@@ -285,7 +285,7 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
 
   return (
     <Fragment>
-      <VStack spacing={4} alignItems="stretch">
+      <VStack spacing={8} alignItems="stretch">
         <VStack backgroundColor={`${colorScheme}.50`} borderRadius="lg" paddingY="8" spacing={4}>
           <Heading as="h1" textColor={`${colorScheme}.700`} size="xl">
             {test}

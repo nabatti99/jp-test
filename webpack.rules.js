@@ -34,6 +34,6 @@ module.exports = [
   // SVG loader
   {
     test: /\.svg$/,
-    type: "asset",
+    type: "asset/resource",
   },
 ];
