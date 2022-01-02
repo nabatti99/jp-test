@@ -2,7 +2,9 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Heading, HStack, Slide, VStack } from "@chakra-ui/react";
 
-import TestQuestion from "./TestQuestion.jsx";
+import MultipleChoiceQuestion from "../Question/MultipleChoiceQuestion.jsx";
+import FillInQuestion from "../Question/FillInQuestion.jsx";
+import QuestionInfo from "../Question/QuestionInfo.jsx";
 import Result from "./Result.jsx";
 import N5Clock from "./Clock.jsx";
 
@@ -153,15 +155,18 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
 
       const newChecklist = new Array();
       const parsedTestData = testData.map((item) => {
-        const name = item.Name.replace(/<p>/gm, "").replace(/<\/p>/gm, "");
+        const script = item.script == "null" ? null : item.script;
 
-        if (item.answer.length == 0)
-          // Header
+        // Test Info
+        if (item.CountAnswerAccurate == 0)
           return {
             ID: item.ID,
-            type: "header",
-            isAdditionHeader: item.Type == 2,
-            content: name,
+            type: "Info",
+            content: item.Name,
+            isAdditionalInfo: item.Type == 1,
+            audio: item.Audio,
+            image: item.Image,
+            script: script,
           };
         else {
           // Question
@@ -182,12 +187,13 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
 
           return {
             ID: item.ID,
-            type: "question",
-            question: name,
+            type: answers.length == 1 ? "Fill In" : "Multiple Choice",
+            question: item.Name,
             questionIndex,
             answers,
             audio: item.Audio,
             image: item.Image,
+            script: script,
           };
         }
       });
@@ -213,34 +219,58 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
 
   const content = testData.map((item) => {
     // Render Content
-    if (item.type == "header")
+    if (item.type == "Info")
       // Header
       return (
-        <Heading
-          key={item.ID}
-          size="lg"
-          dangerouslySetInnerHTML={{ __html: item.content }}
-          paddingTop={item.isAdditionHeader == 2 ? 16 : 0}
-          paddingBottom={8}
-          className="animate__animated animate__fadeIn"
-        ></Heading>
-      );
-    else {
-      return (
-        <TestQuestion
+        <QuestionInfo
           key={item.ID}
           colorScheme={colorScheme}
-          question={item.question}
-          answers={item.answers}
+          content={item.content}
           audio={item.audio}
           image={item.image}
+          script={item.script}
           isDoing={session.isTiming || session.doingTestType == NO_TIMING}
-          info={checklist[item.questionIndex]}
-          onChangeAnswer={(guessAnswer, isCorrect) =>
-            handleGuessChangedAnswer(guessAnswer, isCorrect, item.questionIndex)
-          }
+          isAdditionalInfo={item.isAdditionalInfo}
         />
       );
+    else {
+      switch (item.type) {
+        case "Multiple Choice":
+          return (
+            <MultipleChoiceQuestion
+              key={item.ID}
+              colorScheme={colorScheme}
+              question={item.question}
+              answers={item.answers}
+              audio={item.audio}
+              image={item.image}
+              script={item.script}
+              isDoing={session.isTiming || session.doingTestType == NO_TIMING}
+              info={checklist[item.questionIndex]}
+              onChangeAnswer={(guessAnswer, isCorrect) =>
+                handleGuessChangedAnswer(guessAnswer, isCorrect, item.questionIndex)
+              }
+            />
+          );
+        case "Fill In":
+          return (
+            <FillInQuestion
+              key={item.ID}
+              colorScheme={colorScheme}
+              question={item.question}
+              answer={item.answers[0]}
+              audio={item.audio}
+              image={item.image}
+              script={item.script}
+              isDoing={session.isTiming || session.doingTestType == NO_TIMING}
+              isTiming={session.isTiming}
+              info={checklist[item.questionIndex]}
+              onChangeAnswer={(guessAnswer, isCorrect) =>
+                handleGuessChangedAnswer(guessAnswer, isCorrect, item.questionIndex)
+              }
+            />
+          );
+      }
     }
   });
 

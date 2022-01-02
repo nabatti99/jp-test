@@ -1,18 +1,34 @@
 import React, { Component } from "react";
-import { Box, Heading, Image, Radio, RadioGroup, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Flex,
+  Heading,
+  Image,
+  Radio,
+  RadioGroup,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 
 import "animate.css";
 
 /**
  * @param {String} question
  * @param {Array} answers
- * @param {String} audio
- * @param {String} image
+ * @param {Uint8Array} audio
+ * @param {Uint8Array} image
  * @param {Boolean} isDoing
+ * @param {Boolean} isShowedAnswer
  * @param {Object} info checklist item
- * @param {Event} onChangeAnswer (isCorrect) => {...}
+ * @param {String} guessAnswer
+ * @param {Event} onChangeAnswer (guessAnswer, isCorrect) => {...}
  */
-class TestQuestion extends Component {
+class MultipleChoiceQuestion extends Component {
   state = {
     audioUrl: null,
     imageUrl: null,
@@ -52,8 +68,9 @@ class TestQuestion extends Component {
   }
 
   render() {
-    const { question, answers, colorScheme, isDoing } = this.props;
+    const { question, answers, script, colorScheme, isDoing } = this.props;
     const { guessAnswer, isCorrect, isShowedAnswer } = this.props.info;
+    const isShownScript = !isDoing && script;
 
     return (
       <Box paddingBottom={8} className="animate__animated animate__fadeIn animate__slow">
@@ -63,6 +80,26 @@ class TestQuestion extends Component {
           {this.state.audioUrl && (
             <Box as="audio" src={this.state.audioUrl} controls width="100%" marginBottom={2} />
           )}
+
+          {isShownScript && (
+            <Accordion allowToggle marginBottom={2}>
+              <AccordionItem>
+                <AccordionButton _expanded={{ backgroundColor: `${colorScheme}.50` }}>
+                  <Flex flexGrow={1}>
+                    <Text fontWeight="medium" textColor="gray.500">
+                      Chi tiết đoạn hội thoại
+                    </Text>
+                  </Flex>
+                  <AccordionIcon />
+                </AccordionButton>
+
+                <AccordionPanel>
+                  <Text dangerouslySetInnerHTML={{ __html: script }} fontWeight="medium" textColor="gray.500" />
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          )}
+
           {this.state.imageUrl && <Image src={this.state.imageUrl} fit="fill" marginBottom={2} />}
         </Box>
 
@@ -116,4 +153,4 @@ class TestQuestion extends Component {
   }
 }
 
-export default TestQuestion;
+export default MultipleChoiceQuestion;

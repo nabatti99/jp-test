@@ -62,6 +62,9 @@ module.exports.readTest = async (...testPaths) => {
     }
     if (item.File) {
       item.ImageUrl = path.join(destinationFolder, item.ID.toString(), `${item.ID}.png`);
+      if (!fs.existsSync(item.ImageUrl))
+        item.ImageUrl = path.join(destinationFolder, item.ID.toString(), `${item.ID}.jpg`);
+
       item.Image = await fsPromises.readFile(item.ImageUrl);
     }
 
