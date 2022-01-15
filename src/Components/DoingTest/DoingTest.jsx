@@ -185,7 +185,7 @@ function DoingTest({ level, section, unit, test, colorScheme, changeTest }) {
             .map((answer) => ({
               ID: answer.ID,
               content: answer.Name,
-              isCorrect: answer.Type == 1,
+              isCorrect: answer.Type > 0,
             }));
 
           return {

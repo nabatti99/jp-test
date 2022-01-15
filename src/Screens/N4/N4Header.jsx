@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Box, Button, Center, Container, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Center, Container, Heading, HStack, Link, Text, VStack } from "@chakra-ui/react";
 
 import { changeTest } from "../../redux/actions";
 
@@ -42,14 +42,20 @@ function N4Header(props) {
           Pick a tests by unit in JLPT N4 course (from unit 25 to unit 50)
         </Text>
         <HStack spacing={4} paddingTop={4}>
-          <Button
-            variant="solid"
-            colorScheme="blue"
-            onClick={null}
-            className="animate__animated animate__fadeInUp animate__slow"
+          <Link
+            href="https://drive.google.com/drive/folders/13Z6ZjbJ4tK3N4p7hI_Qaa53mOVBjocKx?usp=sharing"
+            isExternal={true}
+            textDecoration="none !important"
           >
-            Want to learn
-          </Button>
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={null}
+              className="animate__animated animate__fadeInUp animate__slow"
+            >
+              Want to learn
+            </Button>
+          </Link>
           {unitTitle && (
             <Button
               variant="outline"
