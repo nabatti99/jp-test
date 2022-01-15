@@ -7,11 +7,19 @@ function HomeFooter(props) {
       <VStack>
         <Heading textColor="gray.300">JP Test</Heading>
         <Text fontWeight="medium" textColor="gray.300">
-          Made by{" "}
-          <Link href="https://www.facebook.com/HUGOClub" target="_blank">
-            Hugo English Club
-          </Link>{" "}
-          team with love.
+          Made with{" "}
+          <Link href="https://www.electronjs.org/" isExternal={true} fontWeight="bold">
+            ElectronJS
+          </Link>
+          {", "}
+          <Link href="https://reactjs.org/" isExternal={true} fontWeight="bold">
+            ReactJS
+          </Link>
+          {" and "}
+          <Link href="https://chakra-ui.com/" isExternal={true} fontWeight="bold">
+            ChakraUI
+          </Link>
+          .
         </Text>
       </VStack>
     </Center>

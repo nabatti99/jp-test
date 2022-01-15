@@ -33,7 +33,7 @@ class UnitTest extends Component {
     {
       name: "N1",
       subtitle: "JLPT N1",
-      colorTheme: "red",
+      colorTheme: "gray",
       isAvailable: false,
     },
   ];

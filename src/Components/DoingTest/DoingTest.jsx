@@ -1,17 +1,20 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Button, Heading, HStack, Slide, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, VStack } from "@chakra-ui/react";
 
 import MultipleChoiceQuestion from "../Question/MultipleChoiceQuestion.jsx";
 import FillInQuestion from "../Question/FillInQuestion.jsx";
 import QuestionInfo from "../Question/QuestionInfo.jsx";
 import Result from "./Result.jsx";
 import N5Clock from "./Clock.jsx";
+import DoubleBackIcon from "../Icons/DoubleBackIcon.jsx";
+
+import { changeTest } from "../../redux/actions.js";
 
 const NORMAL = "NORMAL";
 const NO_TIMING = "NO_TIMING";
 
-function DoingTest({ level, section, unit, test, colorScheme }) {
+function DoingTest({ level, section, unit, test, colorScheme, changeTest }) {
   const [checklist, setChecklist] = useState(new Array());
   const [timer, setTimer] = useState({
     isShown: false,
@@ -316,7 +319,13 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
   return (
     <Fragment>
       <VStack spacing={8} alignItems="stretch">
-        <VStack backgroundColor={`${colorScheme}.50`} borderRadius="lg" paddingY="8" spacing={4}>
+        <VStack
+          backgroundColor={`${colorScheme}.50`}
+          borderRadius="lg"
+          paddingY="8"
+          spacing={4}
+          position="relative"
+        >
           <Heading as="h1" textColor={`${colorScheme}.700`} size="xl">
             {test}
           </Heading>
@@ -325,6 +334,25 @@ function DoingTest({ level, section, unit, test, colorScheme }) {
           </Heading>
 
           {buttons}
+
+          <Box
+            position="absolute"
+            top="50%"
+            left="0"
+            alignSelf="start"
+            marginTop="0 !important"
+            transform="translateY(-50%)"
+            paddingX={8}
+            cursor="pointer"
+            opacity={0.15}
+            _hover={{
+              opacity: 0.4,
+            }}
+            transition="0.24s"
+            onClick={() => changeTest(level, section, unit, null)}
+          >
+            <DoubleBackIcon boxSize={24} color={`${colorScheme}.500`} />
+          </Box>
         </VStack>
 
         <VStack alignItems="stretch">{content}</VStack>
@@ -350,4 +378,8 @@ const mapStateToProps = (state) => ({
   test: state.test,
 });
 
-export default connect(mapStateToProps)(DoingTest);
+const mapDispatchToProps = (dispatch) => ({
+  changeTest: (level, section, unit, test) => dispatch(changeTest(level, section, unit, test)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DoingTest);

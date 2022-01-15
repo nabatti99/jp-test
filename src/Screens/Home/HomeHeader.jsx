@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Box, Button, Heading, HStack, Text, Container, Image } from "@chakra-ui/react";
-import { ArrowForwardIcon, DownloadIcon } from "@chakra-ui/icons";
+import { Box, Button, Heading, HStack, Text, Container, Image, Link } from "@chakra-ui/react";
+import { ArrowForwardIcon, DownloadIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 
 import SquarePIcon from "../../Components/Icons/SquarePIcon.jsx";
 import SquareJIcon from "../../Components/Icons/SquareJIcon.jsx";
@@ -59,14 +59,20 @@ class HomeHeader extends Component {
             >
               Get Started
             </Button>
-            <Button
-              variant="outline"
-              colorScheme="teal"
-              rightIcon={<DownloadIcon />}
-              className="animate__animated animate__fadeInUp animate__slow"
+            <Link
+              href="https://drive.google.com/drive/folders/1KM2yYcZS3ysplfAaKQrtluUHv5TNn7lT?usp=sharing"
+              isExternal={true}
+              textDecoration="none !important"
             >
-              More tests
-            </Button>
+              <Button
+                variant="outline"
+                colorScheme="teal"
+                rightIcon={<ExternalLinkIcon />}
+                className="animate__animated animate__fadeInUp animate__slow"
+              >
+                More tests
+              </Button>
+            </Link>
           </HStack>
         </Container>
 

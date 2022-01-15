@@ -8,7 +8,7 @@ const ADD_METADATA = "ADD_METADATA";
 const DONE = "DONE";
 const FAIL = "FAIL";
 
-const testTypes = ["Từ vựng", "Kanji", "Ngữ pháp", "Kaiwa", "Luyện tập", "Hong bik"];
+const testTypes = ["Từ vựng", "Kanji", "Ngữ pháp", "Kaiwa", "Đọc hiểu", "Luyện tập", "Hong bik"];
 
 /**
  * @param {String} name
