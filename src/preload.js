@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 const { readJSON, readDir, readTest, readSummary, scanJSON } = require("./utilities/native/readData");
 const { saveJSON, saveAudio, saveImage, prepareDir } = require("./utilities/native/saveData");
+const { deleteDir } = require("./utilities/native/deleteData");
 
 contextBridge.exposeInMainWorld("nativeAPI", {
   readJSON: async (filePath) => readJSON(filePath),
@@ -15,6 +16,8 @@ contextBridge.exposeInMainWorld("nativeAPI", {
   readDir: async (...dirPaths) => readDir(...dirPaths),
   readTest: async (...testPaths) => readTest(...testPaths),
   readSummary: async (...testPaths) => readSummary(...testPaths),
+
+  deleteDir: async (...dirPaths) => deleteDir(...dirPaths),
 });
 
 console.log("Loaded Preload file");

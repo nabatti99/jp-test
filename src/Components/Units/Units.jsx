@@ -1,6 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Box, Button, Center, Divider, Heading, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Heading,
+  HStack,
+  SimpleGrid,
+  Text,
+  Tooltip,
+  VStack,
+} from "@chakra-ui/react";
 
 import BooksIcon from "../Icons/BooksIcon.jsx";
 import CupIcon from "../Icons/CupIcon.jsx";
@@ -10,7 +21,8 @@ import UnitCreator from "./UnitCreator.jsx";
 import { changeTest } from "../../redux/actions";
 
 import "animate.css";
-import { AddIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowDownIcon, ArrowUpIcon, DeleteIcon } from "@chakra-ui/icons";
+import Trash from "../Trash/Trash.jsx";
 
 /**
  * @param {String} section Section folder. If not use section => "."
@@ -20,15 +32,19 @@ class Units extends Component {
     units: new Array(),
     isCollapsed: true,
     isCreating: false,
+
+    isDeleting: false,
+    selectedUnits: new Array(),
   };
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    // Update content after uploaded
-    if (prevProps.timestamp != this.props.timestamp) this.getUnitData();
-  }
+  selectTimer = null;
 
   componentDidMount() {
     this.getUnitData();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.selectTimer);
   }
 
   getUnitData = () => {
@@ -53,8 +69,42 @@ class Units extends Component {
     this.getUnitData();
   };
 
+  handleUnitClicked = (unit) => {
+    const { level, section, changeTest } = this.props;
+
+    if (!this.state.isDeleting) changeTest(level, section, unit, null);
+  };
+
+  handleUnitMouseDown = (unit) => {
+    const currentSelectedUnits = this.state.selectedUnits;
+    const index = currentSelectedUnits.findIndex((item) => item == unit);
+
+    if (this.state.isDeleting) {
+      if (index > -1) {
+        const selectedUnits = [...currentSelectedUnits.slice(0, index), ...currentSelectedUnits.slice(index + 1)];
+        this.setState({ selectedUnits });
+      } else {
+        const selectedUnits = [...currentSelectedUnits, unit];
+        this.setState({ selectedUnits });
+      }
+    } else
+      this.selectTimer = setTimeout(() => {
+        const selectedUnits = [...currentSelectedUnits, unit];
+        this.setState({ isDeleting: true, selectedUnits });
+      }, 1000);
+  };
+
+  handleUnitMouseUp = () => {
+    clearTimeout(this.selectTimer);
+  };
+
+  handleUnitsDeleted = () => {
+    this.setState({ isDeleting: false, selectedUnits: new Array() });
+    this.getUnitData();
+  };
+
   render() {
-    const { colorScheme, level, section, changeTest } = this.props;
+    const { colorScheme, level, section } = this.props;
     const { isCollapsed, units } = this.state;
 
     let units2Render = units;
@@ -67,73 +117,91 @@ class Units extends Component {
             {section}
           </Heading>
 
-          <Button variant="ghost" colorScheme={colorScheme} onClick={this.handleToggleView}>
-            {isCollapsed ? <ArrowDownIcon /> : <ArrowUpIcon />}
-          </Button>
+          <HStack>
+            <Trash
+              colorScheme={colorScheme}
+              onDelete={this.handleUnitsDeleted}
+              isActive={this.state.isDeleting}
+              selectedItems={this.state.selectedUnits.map((unit) => [level, section, unit])}
+            />
+
+            <Button variant="ghost" colorScheme={colorScheme} onClick={this.handleToggleView}>
+              {isCollapsed ? <ArrowDownIcon /> : <ArrowUpIcon />}
+            </Button>
+          </HStack>
         </HStack>
 
         <Divider marginTop={4} />
 
         <SimpleGrid columns={4} gap={4} paddingTop={8}>
-          {units2Render.map((unit, index) => (
-            <Box
-              key={unit}
-              borderRadius="xl"
-              role="group"
-              backgroundColor={`${colorScheme}.50`}
-              borderWidth={1}
-              borderColor="transparent"
-              _hover={{ borderColor: `${colorScheme}.500` }}
-              transitionDuration="0.24s"
-              className="animate__animated animate__bounceIn"
-              cursor="pointer"
-              overflow="hidden"
-              onClick={() => changeTest(level, section, unit, null)}
-            >
-              <VStack alignItems="stretch" spacing={0} height="100%">
-                <Center paddingY={8} position="relative" overflow="hidden">
-                  <Center>
-                    <Heading as="h3" size="2xl" textColor={`${colorScheme}.600`} letterSpacing="tight">
-                      {index + 1 < 10 ? `0${index + 1}` : index + 1}
-                    </Heading>
-                  </Center>
+          {units2Render.map((unit, index) => {
+            const isSelected = this.state.selectedUnits.findIndex((item) => item == unit) > -1;
+            const unitColorScheme = isSelected ? "red" : colorScheme;
 
-                  <BooksIcon
-                    boxSize={12}
-                    position="absolute"
-                    bottom={0}
-                    right={0}
-                    opacity={0.15}
-                    color={`${colorScheme}.500`}
-                  />
+            return (
+              <Box
+                key={unit}
+                borderRadius="xl"
+                role="group"
+                backgroundColor={`${unitColorScheme}.50`}
+                borderWidth={1}
+                borderColor="transparent"
+                _hover={{ borderColor: `${unitColorScheme}.500` }}
+                transitionDuration="0.24s"
+                className="animate__animated animate__bounceIn"
+                cursor="pointer"
+                overflow="hidden"
+                onClick={() => this.handleUnitClicked(unit)}
+                onMouseDown={() => this.handleUnitMouseDown(unit)}
+                onMouseUp={() => this.handleUnitMouseUp(unit)}
+              >
+                <Tooltip label="Long press to select" openDelay={3000}>
+                  <VStack alignItems="stretch" spacing={0} height="100%">
+                    <Center paddingY={8} position="relative" overflow="hidden">
+                      <Center>
+                        <Heading as="h3" size="2xl" textColor={`${unitColorScheme}.600`} letterSpacing="tight">
+                          {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                        </Heading>
+                      </Center>
 
-                  <LampDeskIcon
-                    boxSize={20}
-                    position="absolute"
-                    bottom={0}
-                    left={-4}
-                    opacity={0.1}
-                    color={`${colorScheme}.500`}
-                  />
+                      <BooksIcon
+                        boxSize={12}
+                        position="absolute"
+                        bottom={0}
+                        right={0}
+                        opacity={0.15}
+                        color={`${unitColorScheme}.500`}
+                      />
 
-                  <CupIcon
-                    boxSize={6}
-                    position="absolute"
-                    bottom={0}
-                    left={12}
-                    opacity={0.2}
-                    color={`${colorScheme}.500`}
-                  />
-                </Center>
+                      <LampDeskIcon
+                        boxSize={20}
+                        position="absolute"
+                        bottom={0}
+                        left={-4}
+                        opacity={0.1}
+                        color={`${unitColorScheme}.500`}
+                      />
 
-                <Center flexGrow={1} backgroundColor={`${colorScheme}.500`} paddingY={2} paddingX={2}>
-                  <Text fontWeight="bold" textColor="white" textAlign="center">
-                    {unit}
-                  </Text>
-                </Center>
-              </VStack>
-            </Box>
-          ))}
+                      <CupIcon
+                        boxSize={6}
+                        position="absolute"
+                        bottom={0}
+                        left={12}
+                        opacity={0.2}
+                        color={`${unitColorScheme}.500`}
+                      />
+                    </Center>
+
+                    <Center flexGrow={1} backgroundColor={`${unitColorScheme}.500`} paddingY={2} paddingX={2}>
+                      <Text fontWeight="bold" textColor="white" textAlign="center">
+                        {unit}
+                      </Text>
+                    </Center>
+                  </VStack>
+                </Tooltip>
+              </Box>
+            );
+          })}
 
           {!isCollapsed && (
             <Center

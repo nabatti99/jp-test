@@ -46,6 +46,11 @@ module.exports.saveAudio = async (id, url, ...testPaths) => {
             console.log(`Saved Audio at: ${audioPath}`);
             writeStream.close();
           });
+
+          writeStream.on("error", (error) => {
+            fsPromises.unlink(filePath);
+            throw error;
+          });
         }
       })
       .on("close", () => {
@@ -86,6 +91,11 @@ module.exports.saveImage = async (id, url, ...testPaths) => {
           writeStream.on("finish", () => {
             console.log(`Saved Image at: ${filePath}`);
             writeStream.close();
+          });
+
+          writeStream.on("error", (error) => {
+            fsPromises.unlink(filePath);
+            throw error;
           });
         }
       })
